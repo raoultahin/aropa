@@ -3,33 +3,33 @@
         <div class="row z-depth-1">
             <div class="col s12">
                 <h2 class="header">Liste des OPF </h2>
-                <table class="responsive-table bordered striped">
+                <table class="bordered striped">
                     <thead>
                     <tr>
                         <th>Code</th>
-                        <th width="25%">Nom</th>
+                        <th>Nom</th>
                         <th>Filières développées</th>
                         <th>Statut juridique</th>
                         <th>Formelle</th>
-                        <th>Siège</th>
-                        <th>Option</th>
+                        <th>Representant</th>
+                        <th width="12%">Option</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php //foreach($opfListe as $opf) { ?>
+                    <?php foreach($opfListe as $opf) { ?>
                     <tr>
-                        <td><?php //echo $opf->CODE_REGION ?></td>
-                        <td><?php //echo $opf->NOM_REGION ?></td>
-                        <td><?php //echo $opf->NOM_REGION ?></td>
-                        <td><?php //echo $opf->NOM_REGION ?></td>
-                        <td><?php //echo $opf->NOM_REGION ?></td>
-                        <td><?php //echo $opf->NOM_REGION ?></td>
+                        <td><a href="<?php echo base_url()?>c_parametre/fiche_op/opf/<?php echo $opf->ID_OPF ?>"><?php echo $opf->CODE_OPF ?></a></td>
+                        <td><?php echo $opf->NOM_OPF ?></td>
+                        <td><?php echo $opf->FILIERES ?></td>
+                        <td><?php echo $opf->STATUT ?></td>
+                        <td><?php if($opf->FORMELLE == 1) echo 'OUI'; else echo 'NON' ?></td>
+                        <td><?php echo $opf->ID_REPRESENTANT ?></td>
                         <td>
-                            <a href="#!" class="waves-effect waves-light green btn edit" data-id="<?php //echo $opf->ID_OPF ?>"><i class="material-icons">edit</i></a>
-                            <a href="#!" class="waves-effect waves-light red btn delete" data-id="<?php //echo $opf->ID_OPF ?>"><i class="material-icons">delete</i></a>
+                            <a href="#!" class="waves-effect waves-light green btn edit" data-id="<?php echo $opf->ID_OPF ?>"><i class="material-icons">edit</i></a>
+                            <a href="#!" class="waves-effect waves-light red btn delete" data-id="<?php echo $opf->ID_OPF ?>"><i class="material-icons">delete</i></a>
                         </td>
                     </tr>
-                    <?php //} ?>
+                    <?php } ?>
                     </tbody>
                 </table>
                 <div class="fixed-action-btn">
@@ -102,3 +102,16 @@
         </form>
     </div>
 </main>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+
+<script type="text/javascript">
+    var li = $('a[href="http://localhost/aropa/c_parametre/liste_opf"]').parent();
+    li.addClass("active");
+    console.log(window.location.href);
+    var parentLi = li.parents("li");
+    parentLi.addClass("active");
+    $(parentLi).children().first().addClass("active");
+</script>

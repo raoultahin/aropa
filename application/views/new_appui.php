@@ -2,7 +2,8 @@
     <div class="container1">
         <div class="row z-depth-1">
             <div class="col s12">
-                <h2 class="header" style="margin-bottom: 30px;">Nouvelle appui OPB (1/2) </h2>
+                <h2 class="header" style="margin-bottom: 30px;">Nouvelle appui <?php echo $op?> </h2>
+                <?php if(sizeof($opListe)>0) { ?>
                 <form method="get" action="#!" style="margin-bottom: 20px;">
                     Région:
                     <div class="input-field inline" style="margin: 0 15px 0 5px">
@@ -28,7 +29,9 @@
                     <input type="submit" value="Filtrer" class="waves-effect blue waves-light btn btn-block" style="vertical-align: middle;">
                 </form>
 
-                <h5 class="green-text">Liste OPB </h5>
+                <?php } ?>
+
+                <h5 class="green-text">Liste <?php echo $op?> </h5>
                 <div class="divider"></div>
                 <table class="responsive-table bordered striped">
                     <thead>
@@ -43,42 +46,17 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <?php foreach($opListe as $opLigne){ ?>
                     <tr>
-                        <td>Alvin</td>
-                        <td>Eclairaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
-                        <td>Alvin</td>
-                        <td>Eclair</td>
-                        <td>Eclair</td>
-                        <td>Eclair</td>
-                        <td><a href="<?php echo base_url(); ?>c_appui/appui_opb/1" class="waves-effect green waves-light btn"><i class="material-icons">done</i></a></td>
+                        <td><?php echo $opLigne->CODE_OP?></td>
+                        <td><?php echo $opLigne->NOM_OP?></td>
+                        <td><?php echo $opLigne->NOM_FOKONTANY?></td>
+                        <td><?php echo $opLigne->NOM_COMMUNE?></td>
+                        <td><?php echo $opLigne->NOM_DISTRICT?></td>
+                        <td><?php echo $opLigne->NOM_REGION?></td>
+                        <td><a href="<?php echo base_url(); ?>c_appui/appui_op/<?php echo $op.'/'.$opLigne->ID_OP ?>" class="waves-effect green waves-light btn"><i class="material-icons">done</i></a></td>
                     </tr>
-                    <tr>
-                        <td>Alan</td>
-                        <td>Alan</td>
-                        <td>Alan</td>
-                        <td>Alan</td>
-                        <td>Alan</td>
-                        <td>Jellybean</td>
-                        <td><a class="waves-effect green waves-light btn"><i class="material-icons">done</i></a></td>
-                    </tr>
-                    <tr>
-                        <td>Jonathan</td>
-                        <td>Jonathan</td>
-                        <td>Jonathan</td>
-                        <td>Jonathan</td>
-                        <td>Lollipop</td>
-                        <td>Lollipop</td>
-                        <td><a class="waves-effect green waves-light btn"><i class="material-icons">done</i></a></td>
-                    </tr>
-                    <tr>
-                        <td>Shannon</td>
-                        <td>Shannon</td>
-                        <td>KitKat</td>
-                        <td>KitKat</td>
-                        <td>$9.99</td>
-                        <td>$9.99</td>
-                        <td><a class="waves-effect green waves-light btn"><i class="material-icons">done</i></a></td>
-                    </tr>
+                    <?php } ?>
                     </tbody>
                 </table>
 
@@ -96,3 +74,16 @@
         </div>
     </div>
 </main>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+
+<script type="text/javascript">
+    var li = $('a[href="http://localhost/aropa/c_appui/new_appui"]').parent();
+    li.addClass("active");
+    console.log(window.location.href);
+    var parentLi = li.parents("li");
+    parentLi.addClass("active");
+    $(parentLi).children().first().addClass("active");
+</script>

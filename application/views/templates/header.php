@@ -17,14 +17,12 @@
     <!-- header -->
     <header>
         <nav class="top-nav">
-            <div class="container">
+            <div style="padding-left: 20px">
                 <div class="nav-wrapper"><a class="page-title"><?php echo $titre ?></a></div>
             </div>
         </nav>
         <!-- side-nav -->
-        <div class="container">
-            <a href="#" data-activates="slide-out" class="button-collapse top-nav full hide-on-large-only"><i class="material-icons">menu</i></a>
-        </div>
+        <a href="#" data-activates="slide-out" class="button-collapse top-nav full hide-on-large-only"><i class="material-icons">menu</i></a>
         <ul id="slide-out" class="side-nav fixed blue-grey darken-3 collapsible" data-collapsible="accordion" style="overflow: auto;">
             <div class="logo">
                 <img class="circle" src="<?php echo base_url(); ?>assets/images/logo-aropa.png" alt="logo"/>
@@ -47,6 +45,8 @@
                 <a href="#!" class="waves-effect waves-light collapsible-header"><i class="material-icons left">work</i>Gestion des Appuis</a>
                 <div class="collapsible-body">
                     <ul>
+                        <li><a href="<?php echo base_url(); ?>c_appui/liste_appui" >Liste des appuis</a></li>
+                        <li><a href="<?php echo base_url(); ?>c_appui/new_appui">Nouvelle appui</a></li>
                         <li><a href="#!" >OPF</a></li>
                         <li><a href="#!" >OPR</a></li>
                         <li><a href="#!" >UNION</a></li>

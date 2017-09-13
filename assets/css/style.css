@@ -101,7 +101,7 @@ nav {
     border: 0;
 }
 .logo {
-   line-height: 70px;
+    line-height: 70px;
     text-align: center;
 }
 img.circle {
@@ -132,7 +132,7 @@ a.button-collapse.top-nav {
     text-align: center;
     height: 48px;
     width: 48px;
-    left: 7.5%;
+    left: 0%;
     top: 0;
     float: none;
     margin-left: 1.5rem;
@@ -150,7 +150,6 @@ a.button-collapse.top-nav {
 }
 .row {
     background-color: #ffffff;
-    padding-bottom: 10px;
 }
 
 h2.header a.btn {
@@ -178,7 +177,7 @@ input[value="Filtrer"] {
     width: 85% !important;
 }
 
-.btn-floating i {
+li>.btn-floating i {
     line-height: 30px;
 }
 .divider {
@@ -233,6 +232,10 @@ input[value="Filtrer"] {
 
 td a.btn {
     padding: 0 10px;
+}
+
+td.input-field {
+    padding: 5px;
 }
 
 /* main fin */

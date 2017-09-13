@@ -21,7 +21,7 @@
                         <td><?php echo $menage->NOM_MENAGE ?></td>
                         <td><?php echo $menage->SURNOM ?></td>
                         <td><?php echo $menage->SEXE ?></td>
-                        <td><?php echo $menage->IMF ?></td>
+                        <td><?php echo /*$menage->IMF*/ str_pad(61,5,0,STR_PAD_LEFT) ?></td>
                         <td>
                             <a href="#!" class="waves-effect waves-light green btn edit" data-id="<?php echo $menage->ID_MENAGE ?>"><i class="material-icons">edit</i></a>
                             <a href="#!" class="waves-effect waves-light red btn delete" data-id="<?php echo $menage->ID_MENAGE ?>"><i class="material-icons">delete</i></a>
@@ -100,3 +100,16 @@
         </form>
     </div>
 </main>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+
+<script type="text/javascript">
+    var li = $('a[href="http://localhost/aropa/c_parametre/liste_menage"]').parent();
+    li.addClass("active");
+    console.log(window.location.href);
+    var parentLi = li.parents("li");
+    parentLi.addClass("active");
+    $(parentLi).children().first().addClass("active");
+</script>

@@ -6,10 +6,6 @@
 
                 <form method="post" action="<?php echo base_url(); ?>c_parametre/insert_menage" style="margin-bottom: 20px;" class="container">
                     <div class="input-field col s12">
-                        <input id="code_menage" type="text" name="code_menage">
-                        <label class="label" for="code_menage">Code EAF</label>
-                    </div>
-                    <div class="input-field col s12">
                         <input id="nom_menage" type="text" name="nom_menage">
                         <label class="label" for="nom_menage">Nom et Prénom</label>
                     </div>
@@ -77,3 +73,15 @@
         </div>
     </div>
 </main>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+<script type="text/javascript">
+    var li = $('a[href="http://localhost/aropa/c_parametre/liste_menage"]').parent();
+    li.addClass("active");
+    console.log(window.location.href);
+    var parentLi = li.parents("li");
+    parentLi.addClass("active");
+    $(parentLi).children().first().addClass("active");
+</script>

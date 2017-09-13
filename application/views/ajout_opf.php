@@ -6,10 +6,6 @@
 
                 <form method="post" action="<?php echo base_url(); ?>c_parametre/insert_opf" style="margin-bottom: 20px;" class="container">
                     <div class="input-field col s12">
-                        <input id="code_opf" type="text" name="code_opf">
-                        <label class="label" for="code_opf">Code OPF</label>
-                    </div>
-                    <div class="input-field col s12">
                         <input id="nom_opf" type="text" name="nom_opf">
                         <label class="label" for="nom_opf">Nom</label>
                     </div>
@@ -44,7 +40,8 @@
                         <label class="grey-text" style="top: 0" for="non">non</label>
                     </div>
                     <div class="input-field col s12">
-                        <input id="representant_opf" type="text" name="representant">
+                        <input type="hidden" name="representant">
+                        <input id="representant_opf" type="text" class="autocomplete" autocomplete="off">
                         <label class="label" for="representant_opf">Représentant OPF</label>
                     </div>
                     <div class="input-field col s12">
@@ -87,3 +84,15 @@
         </div>
     </div>
 </main>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+<script type="text/javascript">
+    var li = $('a[href="http://localhost/aropa/c_parametre/liste_opf"]').parent();
+    li.addClass("active");
+    console.log(window.location.href);
+    var parentLi = li.parents("li");
+    parentLi.addClass("active");
+    $(parentLi).children().first().addClass("active");
+</script>

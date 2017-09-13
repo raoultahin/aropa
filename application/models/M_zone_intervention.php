@@ -152,4 +152,9 @@
             }
         }
 
+        public function getZoneInterventionByIdFkt($idFkt){
+            $query = $this->db->get_where('zone_intervention', array('id_fokontany' =>$idFkt));
+            return $query->row();
+        }
+
 	}
