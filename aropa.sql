@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 13 Septembre 2017 à 08:05
+-- Généré le :  Mer 13 Septembre 2017 à 09:26
 -- Version du serveur :  5.7.14
 -- Version de PHP :  5.6.25
 
@@ -435,7 +435,8 @@ CREATE TABLE `opb_menages` (
 --
 
 INSERT INTO `opb_menages` (`ID_OPB_MENAGE`, `ID_MENAGE`, `ID_FONCTION`, `ID_OPB`, `DATE_ADHESION`) VALUES
-(4, 2, 1, 1, '2017-09-28');
+(4, 2, 1, 1, '2017-09-28'),
+(5, 1, 4, 1, '2017-09-24');
 
 -- --------------------------------------------------------
 
@@ -1004,7 +1005,7 @@ ALTER TABLE `opb`
 -- AUTO_INCREMENT pour la table `opb_menages`
 --
 ALTER TABLE `opb_menages`
-  MODIFY `ID_OPB_MENAGE` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID_OPB_MENAGE` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT pour la table `opf`
 --

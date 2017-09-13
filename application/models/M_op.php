@@ -166,6 +166,23 @@
             }
         }
 
+        public function getOprMembres($idOpr){
+            $this->db->select('opb.ID_OPB ID_OP,CODE_OPB CODE_OP,NOM_OPB NOM_OP,TYPE,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT');
+            $this->db->from('opr_opb');
+            $this->db->join('opb', 'opb.ID_OPB = opr_opb.ID_OPB');
+            $this->db->join('zone_intervention', 'zone_intervention.ID_FOKONTANY = opb.ID_FOKONTANY');
+            $this->db->where('ID_OPR',$idOpr);
+            $opb = $this->db->get_compiled_select();
+
+            $this->db->select('ID_UNION ID_OP,CODE_UNION CODE_OP,NOM_UNION NOM_OP,TYPE,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT');
+            $this->db->from('tab_union');
+            $this->db->join('zone_intervention', 'zone_intervention.ID_FOKONTANY = tab_union.ID_FOKONTANY');
+            $this->db->where('ID_OPR',$idOpr);
+            $union = $this->db->get_compiled_select();
+
+            return $this->db->query($opb . ' UNION ' . $union)->result();
+        }
+
         //UNION
         public function getUnion(){
             $this->db->select('tab_union.ID_UNION,CODE_UNION,NOM_UNION,STATUT,FORMELLE,ID_REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
@@ -219,6 +236,15 @@
                 );
                 $this->db->insert('union_opb', $data);
             }
+        }
+
+        public function getUnionMembres($idUnion){
+            $this->db->select('opb.ID_OPB,CODE_OPB,NOM_OPB,TYPE,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT');
+            $this->db->from('union_opb');
+            $this->db->join('opb', 'opb.ID_OPB = union_opb.ID_OPB');
+            $this->db->join('zone_intervention', 'zone_intervention.ID_FOKONTANY = opb.ID_FOKONTANY');
+            $this->db->where('ID_UNION',$idUnion);
+            return $this->db->get()->result();
         }
 
         //OPB
@@ -285,7 +311,7 @@
             }
         }
 
-        public function getOpbMembreByIdOpb($idOpb){
+        public function getOpbMembres($idOpb){
             $this->db->select('menages.ID_MENAGE,CODE_MENAGE,NOM_MENAGE,SURNOM,TYPE,NOM_FONCTION,SEXE,DATE_ADHESION,IMF');
             $this->db->from('opb_menages');
             $this->db->join('menages', 'menages.ID_MENAGE = opb_menages.ID_MENAGE');
@@ -339,7 +365,7 @@
         }
 
         public function getEafListeNotIn($idOpb){
-            $query = $this->db->query('SELECT menages.ID_MENAGE, CODE_MENAGE, menages.NOM_MENAGE, menages.SURNOM FROM opb_menages RIGHT JOIN menages ON menages.ID_MENAGE = opb_menages.ID_OPB WHERE ID_OPB IS NULL OR ID_OPB != '.$idOpb);
+            $query = $this->db->query('SELECT menages.ID_MENAGE, CODE_MENAGE, menages.NOM_MENAGE, menages.SURNOM FROM opb_menages RIGHT JOIN menages ON menages.ID_MENAGE = opb_menages.ID_MENAGE WHERE ID_OPB IS NULL OR ID_OPB != '.$idOpb);
             return $query->result();
         }
 
@@ -352,5 +378,10 @@
             $this->db->from('opb_menages');
             $this->db->where('ID_MENAGE',$idMenage);
             return $this->db->get()->result();
+        }
+
+        public function getNbrEafByIdOpb($idOpb){
+            $query = $this->db->query('SELECT SEXE FROM opb_menages JOIN menages ON menages.ID_MENAGE = opb_menages.ID_MENAGE WHERE ID_OPB = '.$idOpb);
+            return $query->result();
         }
 	}

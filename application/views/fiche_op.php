@@ -104,6 +104,74 @@
                     </tbody>
                 </table>
                 <?php } ?>
+                <?php if($op=='opr'){?>
+                    <table class="bordered striped">
+                        <thead>
+                        <tr>
+                            <th width="10%">Code OPB</th>
+                            <th>Nom de l'OPB/Union</th>
+                            <th>Type OP</th>
+                            <th>Nb EAF</th>
+                            <th>Sexe(M)</th>
+                            <th>Sexe(F)</th>
+                            <th>Fokontany</th>
+                            <th>Commune</th>
+                            <th>District</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($membres as $membre) { $nb = getNbrEafByIdOp($op, $membre->ID_OP); ?>
+                            <tr>
+                                <td><a href="<?php echo base_url()?>c_parametre/fiche_op/opb/<?php echo $membre->ID_OP ?>"><?php echo $membre->CODE_OP ?></a></td>
+                                <td><?php echo $membre->NOM_OP ?></td>
+                                <td><?php echo $membre->TYPE ?></td>
+                                <td><?php echo $nb['nb'] ?></td>
+                                <td><?php echo $nb['H'] ?></td>
+                                <td><?php echo $nb['F'] ?></td>
+                                <td><?php echo $membre->NOM_FOKONTANY ?></td>
+                                <td><?php echo $membre->NOM_COMMUNE ?></td>
+                                <td><?php echo $membre->NOM_DISTRICT ?></td>
+                                <td width="1%"><button class="waves-effect waves-light btn red" style="padding: 0 0.5rem"><i class="material-icons">delete</i></button></td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                <?php } ?>
+                <?php if($op=='union'){?>
+                    <table class="bordered striped">
+                        <thead>
+                        <tr>
+                            <th width="10%">Code OPB</th>
+                            <th>Nom de l'OPB</th>
+                            <th>Type OP</th>
+                            <th>Nb EAF</th>
+                            <th>Sexe(M)</th>
+                            <th>Sexe(F)</th>
+                            <th>Fokontany</th>
+                            <th>Commune</th>
+                            <th>District</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($membres as $membre) { $nb = getNbrEafByIdOpb($membre->ID_OPB); ?>
+                            <tr>
+                                <td><a href="<?php echo base_url()?>c_parametre/fiche_op/opb/<?php echo $membre->ID_OPB ?>"><?php echo $membre->CODE_OPB ?></a></td>
+                                <td><?php echo $membre->NOM_OPB ?></td>
+                                <td><?php echo $membre->TYPE ?></td>
+                                <td><?php echo $nb['nb'] ?></td>
+                                <td><?php echo $nb['H'] ?></td>
+                                <td><?php echo $nb['F'] ?></td>
+                                <td><?php echo $membre->NOM_FOKONTANY ?></td>
+                                <td><?php echo $membre->NOM_COMMUNE ?></td>
+                                <td><?php echo $membre->NOM_DISTRICT ?></td>
+                                <td width="1%"><button class="waves-effect waves-light btn red" style="padding: 0 0.5rem"><i class="material-icons">delete</i></button></td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                <?php } ?>
                 <?php if($op=='opb'){?>
                     <table class="bordered striped">
                         <thead>

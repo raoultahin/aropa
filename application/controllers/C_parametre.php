@@ -547,8 +547,10 @@
                 $data['filieres'] = $this->M_op->getOpFiliere($id,$op);
 
                 if($op=='opf') $data['membres'] = $this->M_op->getOpfMembres($id);
+                if($op=='opr') $data['membres'] = $this->M_op->getOprMembres($id);
+                if($op=='union') $data['membres'] = $this->M_op->getUnionMembres($id);
                 if($op=='opb') {
-                    $data['membres'] = $this->M_op->getOpbMembreByIdOpb($id);
+                    $data['membres'] = $this->M_op->getOpbMembres($id);
                 }
                 $this->load->view('templates', $data);
             }
