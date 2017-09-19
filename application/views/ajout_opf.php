@@ -95,4 +95,31 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+
+    $(document).ready(function(){
+        $(function() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost/aropa/c_rest/liste_menage',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                dataType : 'json',
+                success: function(response) {
+                    var liste = response;
+                    var data = {};
+                    for (var i = 0; i < liste.length; i++) {
+                        data[liste[i].CODE_MENAGE+' : '+liste[i].NOM_MENAGE+' ('+liste[i].SURNOM+')'] = liste[i].ID_MENAGE;
+                    }
+                    $('input.autocomplete').autocomplete({
+                        data: data,
+                        onAutocomplete: function(val) {
+                            $('input.autocomplete').change(function(){
+                                $('input[name="representant"]').attr('value',data[val]);
+                            });
+                        },
+                        limit: 5
+                    });
+                }
+            });
+        });
+    });
 </script>

@@ -7,7 +7,15 @@
             $data['titre'] = 'Gestion des appuis';
             $data['contents'] = 'liste_appui';
             $data['appuiListe'] = $this->M_appui->getAppuiListe();
-            $data['appuiListe'][0]->MONTANT = number_format($data['appuiListe'][0]->MONTANT, 2, '.', ',');
+            $this->load->view('templates',$data);
+        }
+
+        public function liste_appui_eaf(){
+            $this->load->model('M_appui');
+
+            $data['titre'] = 'Gestion des appuis';
+            $data['contents'] = 'liste_appui_eaf';
+            $data['appuiEafListe'] = $this->M_appui->getAppuiEafListe();
             $this->load->view('templates',$data);
         }
 
@@ -49,6 +57,25 @@
             }
         }
 
+        public function appui_eaf($id=''){
+            $this->load->model('M_zone_intervention');
+            $this->load->model('M_op');
+            $data['titre'] = 'Gestion des appuis';
+            $data['regions'] = $this->M_zone_intervention->getRegion();
+            if ($id == '') {
+                $data['eafListe'] = $this->M_op->getMenages();
+                $data['contents'] = 'new_appui_eaf';
+
+                $this->load->view('templates', $data);
+            }
+            else{
+                $data['contents'] = 'form_appui_eaf';
+                $data['id'] = $id;
+                $data['eaf'] = $this->M_op->getMenageById($id);
+                $this->load->view('templates', $data);
+            }
+        }
+
         public function ajout_appui(){
             $idParent = $this->input->post('id_parent');
 
@@ -86,9 +113,32 @@
             $this->load->model('M_appui');
 
             if($idFiliere!=''&& $dateFinancement!='' && $montant!=''){
-                $error = $this->M_appui->ajoutAppui($idFiliere,$dateFinancement,$montant,$lieuFormation,$themeFormation,$debutFormation,$finFormation,$idMecanisme,$autreMec,$idCatOp,$autreCat,$idParent,$idType,$typeOp,$idOp,$description,$objetNature,$qte,$unite,$dateCollecte);
-                echo $error;
+                $this->M_appui->ajoutAppui($idFiliere,$dateFinancement,$montant,$lieuFormation,$themeFormation,$debutFormation,$finFormation,$idMecanisme,$autreMec,$idCatOp,$autreCat,$idParent,$idType,$typeOp,$idOp,$description,$objetNature,$qte,$unite,$dateCollecte);
+                redirect('c_appui/liste_appui');
             }
+        }
+
+        public function ajout_appui_eaf(){
+            $idParent = $this->input->post('id_parent');
+
+            //formation
+            $themeFormation = $this->input->post('theme_formation');
+            $debutFormation = $this->input->post('formation_debut');
+            $finFormation = $this->input->post('formation_fin');
+            $lieuFormation = $this->input->post('id_fokontany');
+
+            //appui_op
+            $idEaf = $this->input->post('id_eaf');
+            $objetNature = $this->input->post('objet_nature');
+            $qte = $this->input->post('qte');
+            $unite = $this->input->post('unite');
+            $dateCollecte = $this->input->post('date_collecte');
+
+            $this->load->model('M_appui');
+
+            $this->M_appui->ajoutAppuiEaf($lieuFormation,$themeFormation,$debutFormation,$finFormation,$idParent,$idEaf,$objetNature,$qte,$unite,$dateCollecte);
+            redirect('c_appui/liste_appui');
+
         }
 
         public function fiche_appui($id=''){
@@ -105,8 +155,44 @@
             $data['cat_op'] = $this->M_appui->getCatOpById($data['appui_op']->ID_CAT_OP);
             $data['formation'] = $this->M_appui->getFormationById($data['appui_op']->ID_FORMATION);
             $data['zone_intervention'] = $this->M_zone_intervention->getZoneInterventionByIdFkt($data['formation']->ID_FOKONTANY);
+            if($data['appui_op']->TYPE_OP!='4') {
+                $data['beneficiaires'] = $this->M_appui->getBeneficiaireById($data['appui_op']->ID_APPUI_OP);
+            }
+            else {
+                $data['beneficiaires'] = $this->M_appui->getEafBeneficiaireById($data['appui_op']->ID_APPUI_OP);
+            }
+            $this->load->view('templates',$data);
+        }
 
-//            var_dump($data['appui_op']);
+        public function ajout_beneficiaire($id){
+            $this->load->model('M_zone_intervention');
+            $this->load->model('M_op');
+            $this->load->model('M_appui');
+            $data['titre'] = 'Gestion des appuis';
+
+            $temp['appui'] = $this->M_appui->getAppuiOpById($id);
+            $data['idAppui'] = $temp['appui']->ID_APPUI_OP;
+            $data['regions'] = $this->M_zone_intervention->getRegion();
+            $data['contents'] = 'ajout_beneficiaire';
+
+            if($temp['appui']->TYPE_OP==1){
+                $data['op']='opr';
+                $data['opListe'] = $this->M_op->getOpfMembres($temp['appui']->ID_OP);
+            }
+            if($temp['appui']->TYPE_OP==2){
+                $data['op']='opb / union';
+                $data['typeOp'] = 2;
+                $data['opListe'] = $this->M_op->getOprMembres($temp['appui']->ID_OP);
+            }
+            if($temp['appui']->TYPE_OP==3){
+                $data['op']='opb';
+                $data['opListe'] = $this->M_op->getUnionMembres($temp['appui']->ID_OP);
+            }
+            if($temp['appui']->TYPE_OP==4){
+                $data['op']='eaf';
+                $data['membres'] = $this->M_op->getOpbMembres($temp['appui']->ID_OP);
+            }
+
             $this->load->view('templates',$data);
         }
 	}

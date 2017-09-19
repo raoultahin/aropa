@@ -78,7 +78,7 @@
                     var liste = response;
                     var data = {};
                     for (var i = 0; i < liste.length; i++) {
-                        data[liste[i].CODE_MENAGE+' : '+liste[i].NOM_MENAGE+'('+liste[i].SURNOM+')'] = liste[i].ID_MENAGE;
+                        data[liste[i].CODE_MENAGE+' : '+liste[i].NOM_MENAGE+' ('+liste[i].SURNOM+')'] = liste[i].ID_MENAGE;
                     }
                     $('input.autocomplete').autocomplete({
                         data: data,

@@ -3,7 +3,7 @@
         <div class="row z-depth-1">
             <div class="col s12">
                 <h2 class="header">Liste des EAF </h2>
-                <table class="responsive-table bordered striped">
+                <table class="bordered striped">
                     <thead>
                     <tr>
                         <th>Code</th>

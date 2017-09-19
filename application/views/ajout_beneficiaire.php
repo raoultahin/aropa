@@ -2,8 +2,8 @@
     <div class="container1">
         <div class="row z-depth-1">
             <div class="col s12">
-                <h2 class="header" style="margin-bottom: 30px;">Nouvelle appui <?php echo $op?> </h2>
-                <?php if(sizeof($opListe)>0) { ?>
+                <h2 class="header" style="margin-bottom: 30px;">Ajout béneficiaire </h2>
+
                 <form method="get" action="#!" style="margin-bottom: 20px;">
                     Région:
                     <div class="input-field inline" style="margin: 0 15px 0 5px">
@@ -29,10 +29,9 @@
                     <input type="submit" value="Filtrer" class="waves-effect blue waves-light btn btn-block" style="vertical-align: middle;">
                 </form>
 
-                <?php } ?>
-
-                <h5 class="green-text">Liste <?php echo $op?> </h5>
+                <h5 class="green-text">Liste <?php echo strtoupper($op)?> </h5>
                 <div class="divider"></div>
+                <?php if($op!='eaf'){?>
                 <table class="bordered striped">
                     <thead>
                     <tr>
@@ -46,7 +45,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($opListe as $opLigne){ ?>
+                    <?php foreach($opListe as $opLigne){
+                        if(isset($typeOp) && $opLigne->CODE_OP[0]=='O') $op = 'opb';
+                        if($opLigne->CODE_OP[0]=='U') $op = 'union';
+                    ?>
                     <tr>
                         <td><?php echo $opLigne->CODE_OP?></td>
                         <td><?php echo $opLigne->NOM_OP?></td>
@@ -54,11 +56,48 @@
                         <td><?php echo $opLigne->NOM_COMMUNE?></td>
                         <td><?php echo $opLigne->NOM_DISTRICT?></td>
                         <td><?php echo $opLigne->NOM_REGION?></td>
-                        <td><a href="<?php echo base_url(); ?>c_appui/appui_op/<?php echo $op.'/'.$opLigne->ID_OP ?>" class="waves-effect green waves-light btn"><i class="material-icons">done</i></a></td>
+                        <td><a href="<?php echo base_url(); ?>c_appui/appui_op/<?php echo $op.'/'.$opLigne->ID_OP ?>?parent=<?php echo $idAppui?>" class="waves-effect green waves-light btn"><i class="material-icons">done</i></a></td>
                     </tr>
                     <?php } ?>
                     </tbody>
                 </table>
+
+                <?php } else {?>
+                    <table class="bordered striped">
+                        <thead>
+                        <tr>
+                            <th width="10%">Code EAF</th>
+                            <th>Nom et Prénoms</th>
+                            <th>Surnom</th>
+                            <th>Type EAF</th>
+                            <th>Fonction</th>
+                            <th>Sexe</th>
+                            <th>Date d'Adhesion</th>
+                            <th>Affiliation autre OP</th>
+                            <th>Affiliation IMF</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($membres as $membre) {?>
+                            <tr>
+                                <td><?php echo $membre->CODE_MENAGE ?></td>
+                                <td><?php echo $membre->NOM_MENAGE ?></td>
+                                <td><?php echo $membre->SURNOM ?></td>
+                                <td><?php echo $membre->TYPE ?></td>
+                                <td><?php echo $membre->NOM_FONCTION ?></td>
+                                <td><?php echo $membre->SEXE ?></td>
+                                <td><?php echo $membre->DATE_ADHESION ?></td>
+                                <td><?php if(getNbrOpbByIdMenage($membre->ID_MENAGE) == 1) echo 'OUI'; else echo 'NON' ?></td>
+                                <td><?php if($membre->IMF == 1) echo 'OUI'; else echo 'NON' ?></td>
+                                <td>
+                                    <a href="<?php echo base_url()?>c_appui/appui_eaf/<?php echo $membre->ID_MENAGE?>?parent=<?php echo $idAppui?>" class="waves-effect waves-light btn green"><i class="material-icons">done</i></a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                <?php } ?>
 
                 <ul class="pagination">
                     <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>

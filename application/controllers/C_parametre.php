@@ -419,13 +419,14 @@
             $statut = $this->input->post('statut');
             $filiereListe = $this->input->post('filieres');
             $formelle = $this->input->post('formelle');
+            $type = $this->input->post('type');
             $representant = $this->input->post('representant');
             $contact = $this->input->post('contact');
             $siege = $this->input->post('id_fokontany');
             $observation = $this->input->post('observation');
             if($representant=='') $representant=null;
             if(isset($nomUnion) && $nomUnion!='') {
-                $error = $this->M_op->insertUnion($siege,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe);
+                $error = $this->M_op->insertUnion($siege,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type);
                 if(!isset($error)) {
                     redirect('c_parametre/liste_union');
                 }
@@ -467,13 +468,14 @@
             $statut = $this->input->post('statut');
             $filiereListe = $this->input->post('filieres');
             $formelle = $this->input->post('formelle');
+            $type = $this->input->post('type');
             $representant = $this->input->post('representant');
             $contact = $this->input->post('contact');
             $siege = $this->input->post('id_fokontany');
             $observation = $this->input->post('observation');
             if($representant=='') $representant=null;
             if(isset($nomOpb) && $nomOpb!='') {
-                $error = $this->M_op->insertOpb($siege,$nomOpb,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe);
+                $error = $this->M_op->insertOpb($siege,$nomOpb,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type);
                 if(!isset($error)) {
                     redirect('c_parametre/liste_opb');
                 }
@@ -511,7 +513,6 @@
         public function insert_menage(){
             $this->load->model('M_op');
 
-            $codeMenage = $this->input->post('code_menage');
             $nomMenage = $this->input->post('nom_menage');
             $surnom = $this->input->post('surnom');
             $sexe = $this->input->post('sexe');
@@ -521,7 +522,7 @@
             $imf = $this->input->post('imf');
 
             if(isset($nomMenage) && $nomMenage!='') {
-                $error = $this->M_op->insertMenage($siege,$typeEaf,$codeMenage,$nomMenage,$surnom,$sexe,$imf,$filiereListe);
+                $error = $this->M_op->insertMenage($siege,$typeEaf,$nomMenage,$surnom,$sexe,$imf,$filiereListe);
                 if(!isset($error)) {
                     redirect('c_parametre/liste_menage');
                 }

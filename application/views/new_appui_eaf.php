@@ -2,8 +2,7 @@
     <div class="container1">
         <div class="row z-depth-1">
             <div class="col s12">
-                <h2 class="header" style="margin-bottom: 30px;">Nouvelle appui <?php echo $op?> </h2>
-                <?php if(sizeof($opListe)>0) { ?>
+                <h2 class="header" style="margin-bottom: 30px;">Nouvelle appui EAF </h2>
                 <form method="get" action="#!" style="margin-bottom: 20px;">
                     Région:
                     <div class="input-field inline" style="margin: 0 15px 0 5px">
@@ -28,16 +27,14 @@
                     </div>
                     <input type="submit" value="Filtrer" class="waves-effect blue waves-light btn btn-block" style="vertical-align: middle;">
                 </form>
-
-                <?php } ?>
-
-                <h5 class="green-text">Liste <?php echo $op?> </h5>
+                <h5 class="green-text">Liste EAF </h5>
                 <div class="divider"></div>
                 <table class="bordered striped">
                     <thead>
                     <tr>
                         <th>Code</th>
-                        <th>Nom</th>
+                        <th>Nom et prénoms</th>
+                        <th>Surnom</th>
                         <th>Fokontany</th>
                         <th>Commune</th>
                         <th>District</th>
@@ -46,15 +43,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($opListe as $opLigne){ ?>
+                    <?php foreach($eafListe as $eaf){ ?>
                     <tr>
-                        <td><?php echo $opLigne->CODE_OP?></td>
-                        <td><?php echo $opLigne->NOM_OP?></td>
-                        <td><?php echo $opLigne->NOM_FOKONTANY?></td>
-                        <td><?php echo $opLigne->NOM_COMMUNE?></td>
-                        <td><?php echo $opLigne->NOM_DISTRICT?></td>
-                        <td><?php echo $opLigne->NOM_REGION?></td>
-                        <td><a href="<?php echo base_url(); ?>c_appui/appui_op/<?php echo $op.'/'.$opLigne->ID_OP ?>" class="waves-effect green waves-light btn"><i class="material-icons">done</i></a></td>
+                        <td><?php echo $eaf->CODE_MENAGE?></td>
+                        <td><?php echo $eaf->NOM_MENAGE?></td>
+                        <td><?php echo $eaf->SURNOM?></td>
+                        <td><?php echo $eaf->NOM_FOKONTANY?></td>
+                        <td><?php echo $eaf->NOM_COMMUNE?></td>
+                        <td><?php echo $eaf->NOM_DISTRICT?></td>
+                        <td><?php echo $eaf->NOM_REGION?></td>
+                        <td><a href="<?php echo base_url(); ?>c_appui/appui_eaf/<?php echo $eaf->ID_MENAGE ?>" class="waves-effect green waves-light btn"><i class="material-icons">done</i></a></td>
                     </tr>
                     <?php } ?>
                     </tbody>

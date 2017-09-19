@@ -5,6 +5,15 @@
             $query = $this->db->query('SELECT * FROM appui_opf UNION SELECT * FROM appui_opr UNION SELECT * FROM appui_union UNION SELECT * FROM appui_opb ORDER BY DATE_SAISIE DESC ');
             return $query->result();
         }
+        public function getAppuiEafListe(){
+            $this->db->select('*');
+            $this->db->from('appui_menage');
+            $this->db->join('menages','appui_menage.ID_MENAGE = menages.ID_MENAGE');
+            $this->db->join('detail_formation','detail_formation.ID_FORMATION = appui_menage.ID_FORMATION','LEFT');
+            $this->db->order_by('DATE_SAISIE','DESC');
+            $query = $this->db->get();
+            return $query->result();
+        }
 
         public function getAppuiOpById($id){
             $query = $this->db->get_where('appui_op', array('id_appui_op' => $id));
@@ -111,7 +120,7 @@
             $data = array(
                 'libelle' => $mecanisme
             );
-            if(! $this->db->insert('mecanisme', $data)){
+            if (!$this->db->insert('mecanisme', $data)) {
                 return $this->db->error();
             }
         }
@@ -121,7 +130,7 @@
             $data = array(
                 'libelle' => $catOp
             );
-            if(! $this->db->insert('cat_op', $data)){
+            if (!$this->db->insert('cat_op', $data)) {
                 return $this->db->error();
             }
         }
@@ -129,26 +138,27 @@
         //ajout_appui
         public function ajoutAppui($idFiliere,$dateFinancement,$montant,$idFokontany,$theme,$dateDebut,$dateFin,$idMecanisme,$autreMec,$idCatOp,$autreCat,$idParent,$idType,$typeOp,$idOp,$description,$objetNature,$qte,$unite,$dateCollecte){
             $this->db->trans_begin();
-            $error=null;
 
-            $error = $this->insertDetailAppui($idFiliere,$dateFinancement,$montant);
-            var_dump($error);
+            $this->insertDetailAppui($idFiliere,$dateFinancement,$montant);
             $idDetail = $this->db->insert_id();
             $idFormation = null;
             if($theme!='') {
-                $error = $this->insertFormation($idFokontany, $theme, $dateDebut, $dateFin);
-                var_dump($error);
+                $this->insertFormation($idFokontany, $theme, $dateDebut, $dateFin);
                 $idFormation = $this->db->insert_id();
             }
             if($idMecanisme==''){
-                $error = $this->insertMecanisme($autreMec);
-                var_dump($error);
-                $idMecanisme = $this->db->insert_id();
+                $idMecanisme = null;
+                if($autreMec!=null) {
+                    $this->insertMecanisme($autreMec);
+                    $idMecanisme = $this->db->insert_id();
+                }
             }
             if($idCatOp==''){
-                $error = $this->insertCatOp($autreCat);
-                var_dump($error);
-                $idCatOp = $this->db->insert_id();
+                $idCatOp = null;
+                if($autreCat!=null) {
+                    $this->insertCatOp($autreCat);
+                    $idCatOp = $this->db->insert_id();
+                }
             }
 
             $data = array(
@@ -171,6 +181,7 @@
             $this->db->insert('appui_op', $data);
             if ($this->db->trans_status() === FALSE)
             {
+                var_dump($this->db->error);
                 $this->db->trans_rollback();
             }
             else
@@ -181,5 +192,58 @@
 
         }
 
+        public function ajoutAppuiEaf($idFokontany,$theme,$dateDebut,$dateFin,$idParent,$idEaf,$objetNature,$qte,$unite,$dateCollecte){
+            $this->db->trans_begin();
+
+            $idFormation = null;
+            if($theme!='' && $theme!=null) {
+                $this->insertFormation($idFokontany, $theme, $dateDebut, $dateFin);
+                $idFormation = $this->db->insert_id();
+            }
+            $data = array(
+                'id_menage' => $idEaf,
+                'id_parent' => $idParent,
+                'id_formation' => $idFormation,
+                'objet_nature' => $objetNature,
+                'qte' => $qte,
+                'unite' => $unite,
+                'date_collecte' => $dateCollecte,
+                'date_saisie' => date("Y-m-d")
+            );
+            $this->db->insert('appui_menage', $data);
+            if ($this->db->trans_status() === FALSE)
+            {
+                var_dump($this->db->error);
+                $this->db->trans_rollback();
+            }
+            else
+            {
+                $this->db->trans_commit();
+                return $this->db->trans_complete();
+            }
+        }
+
+        public function getBeneficiaireById($id){
+            $query = $this->db->get_where('appui_op', array('id_parent' => $id));
+            return $query->result();
+        }
+
+        public function getEafBeneficiaireById($id){
+            $this->db->select('*');
+            $this->db->from('appui_menage');
+            $this->db->join('menages','appui_menage.ID_MENAGE = menages.ID_MENAGE');
+            $this->db->join('detail_formation','detail_formation.ID_FORMATION = appui_menage.ID_FORMATION','LEFT');
+            $this->db->where('id_parent',$id);
+            $query = $this->db->get();
+            return $query->result();
+        }
+
+        public function getNbEafAppuieByIdAppuiOpb($idAppui){
+            $this->db->select('*');
+            $this->db->from('appui_menage');
+            $this->db->join('menages','menages.ID_MENAGE=appui_menage.ID_MENAGE');
+            $this->db->where('ID_PARENT',$idAppui);
+            return $this->db->get()->result();
+        }
 
 	}

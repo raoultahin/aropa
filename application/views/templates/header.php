@@ -46,12 +46,6 @@
                 <div class="collapsible-body">
                     <ul>
                         <li><a href="<?php echo base_url(); ?>c_appui/liste_appui" >Liste des appuis</a></li>
-                        <li><a href="<?php echo base_url(); ?>c_appui/new_appui">Nouvelle appui</a></li>
-                        <li><a href="#!" >OPF</a></li>
-                        <li><a href="#!" >OPR</a></li>
-                        <li><a href="#!" >UNION</a></li>
-                        <li><a href="<?php echo base_url(); ?>c_appui/appui_opb" >OPB</a></li>
-                        <li><a href="#!" >Ménages</a></li>
                     </ul>
                 </div>
             </li>

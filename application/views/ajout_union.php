@@ -39,6 +39,10 @@
                         <input class="with-gap" name="formelle" type="radio" id="non" value="0"/>
                         <label class="grey-text" style="top: 0" for="non">non</label>
                     </div>
+                    <div class="input-field col s4">
+                        <input id="type_op" name="type" type="number" class="validate" min="1">
+                        <label class="label" for="type_op">Type OP</label>
+                    </div>
                     <div class="input-field col s12">
                         <input type="hidden" name="representant">
                         <input id="representant_union" type="text" class="autocomplete" autocomplete="off">
@@ -95,4 +99,31 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+
+    $(document).ready(function(){
+        $(function() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost/aropa/c_rest/liste_menage',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                dataType : 'json',
+                success: function(response) {
+                    var liste = response;
+                    var data = {};
+                    for (var i = 0; i < liste.length; i++) {
+                        data[liste[i].CODE_MENAGE+' : '+liste[i].NOM_MENAGE+' ('+liste[i].SURNOM+')'] = liste[i].ID_MENAGE;
+                    }
+                    $('input.autocomplete').autocomplete({
+                        data: data,
+                        onAutocomplete: function(val) {
+                            $('input.autocomplete').change(function(){
+                                $('input[name="representant"]').attr('value',data[val]);
+                            });
+                        },
+                        limit: 5
+                    });
+                }
+            });
+        });
+    });
 </script>

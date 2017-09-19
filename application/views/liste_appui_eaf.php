@@ -2,32 +2,34 @@
     <div class="container1">
         <div class="row z-depth-1">
             <div class="col s12">
-                <h2 class="header">Liste des appuis effectués (OP) <a href="<?php echo base_url()?>c_appui/liste_appui_eaf" class="waves-effect blue waves-light btn right">Appui EAF</a></h2>
+                <h2 class="header">Liste des appuis effectués (EAF) <a href="<?php echo base_url()?>c_appui/liste_appui" class="waves-effect blue waves-light btn right">Appui OP</a></h2>
                 <table class="bordered striped">
                     <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Code OP</th>
-                        <th>Nom OP</th>
-                        <th>Date de financement</th>
-                        <th>Montant(Ar)</th>
-                        <th>Filière</th>
-                        <th>Type appui</th>
+                        <th>Code EAF</th>
+                        <th>Nom et prénoms</th>
+                        <th>Surnom</th>
+                        <th>Objet/nature offert</th>
+                        <th>Qte</th>
+                        <th>Unité</th>
                         <th width="3%"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($appuiListe as $appui) { ?>
+                    <?php foreach($appuiEafListe as $appui) {
+                        if($appui->THEME!=null) $appui->OBJET_NATURE = $appui->THEME;
+                    ?>
                     <tr>
                         <td><?php echo $appui->DATE_SAISIE ?></td>
-                        <td><?php echo $appui->CODE_OP ?></td>
-                        <td><?php echo $appui->NOM_OP ?></td>
-                        <td><?php echo $appui->DATE_FINANCEMENT ?></td>
-                        <td><?php echo number_format($appui->MONTANT, 2, '.', ',')?></td>
-                        <td><?php echo $appui->NOM_FILIERE ?></td>
-                        <td><?php echo $appui->LIBELLE ?></td>
+                        <td><?php echo $appui->CODE_MENAGE ?></td>
+                        <td><?php echo $appui->NOM_MENAGE ?></td>
+                        <td><?php echo $appui->SURNOM ?></td>
+                        <td><?php echo $appui->OBJET_NATURE ?></td>
+                        <td><?php echo $appui->QTE ?></td>
+                        <td><?php echo $appui->UNITE ?></td>
                         <td>
-                            <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $appui->ID_APPUI_OP?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
+                            <a href="<?php echo base_url()?>c_appui/fiche_appui_eaf/<?php echo $appui->ID_APPUI_MENAGE?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
                         </td>
                     </tr>
                     <?php } ?>
