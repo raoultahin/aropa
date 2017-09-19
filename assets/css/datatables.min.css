@@ -1,0 +1,40 @@
+table.dataTable thead>tr>th.sorting_asc,table.dataTable thead>tr>th.sorting_desc,table.dataTable thead>tr>th.sorting,table.dataTable thead>tr>td.sorting_asc,table.dataTable thead>tr>td.sorting_desc,table.dataTable thead>tr>td.sorting{padding-right:30px}
+table.dataTable thead>tr>th:active,table.dataTable thead>tr>td:active{outline:none}
+table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,table.dataTable thead .sorting_desc_disabled{cursor:pointer;position:relative}
+table.dataTable thead .sorting:before,table.dataTable thead .sorting:after,table.dataTable thead .sorting_asc:before,table.dataTable thead .sorting_asc:after,table.dataTable thead .sorting_desc:before,table.dataTable thead .sorting_desc:after,table.dataTable thead .sorting_asc_disabled:before,table.dataTable thead .sorting_asc_disabled:after,table.dataTable thead .sorting_desc_disabled:before,table.dataTable thead .sorting_desc_disabled:after{position:absolute;bottom:11px;display:block;opacity:0.3;font-size:1.3em}
+table.dataTable thead .sorting:before,table.dataTable thead .sorting_asc:before,table.dataTable thead .sorting_desc:before,table.dataTable thead .sorting_asc_disabled:before,table.dataTable thead .sorting_desc_disabled:before{right:1em;content:"\2191"}
+table.dataTable thead .sorting:after,table.dataTable thead .sorting_asc:after,table.dataTable thead .sorting_desc:after,table.dataTable thead .sorting_asc_disabled:after,table.dataTable thead .sorting_desc_disabled:after{right:0.5em;content:"\2193"}
+table.dataTable thead .sorting_asc:before,table.dataTable thead .sorting_desc:after{opacity:1}
+table.dataTable thead .sorting_asc_disabled:before,table.dataTable thead .sorting_desc_disabled:after{opacity:0}
+
+select[name='liste_appui_length'] {
+    width: 60px;
+    display: inline;
+}
+.dataTables_filter,#liste_appui_paginate{
+    float: right;
+}
+.dataTables_length,.dataTables_info{
+    float: left;
+}
+.dataTables_filter>label>input{
+    color: #000000;
+}
+#liste_appui_paginate,.dataTables_info{
+    margin: 10px 0 5px 0;
+}
+#liste_appui_paginate span>a.current {
+    color: #ffffff;
+    background-color: #039be5;
+}
+#liste_appui_paginate a {
+    font-size: 1.2rem;
+    padding: 0 10px;
+    border-radius: 2px;
+    height: 30px;
+    line-height: 1.7;
+}
+#liste_appui_previous i,#liste_appui_next i{
+    font-size: 2rem;
+    line-height: 1;
+}
