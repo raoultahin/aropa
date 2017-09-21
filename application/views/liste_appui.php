@@ -5,7 +5,7 @@
                 <h2 class="header">Liste des appuis effectués (OP) <a href="<?php echo base_url()?>c_appui/liste_appui_eaf" class="waves-effect blue waves-light btn right">Appui EAF</a></h2>
                 <table id="liste_appui" class="bordered striped">
                     <thead>
-                    <tr>
+                    <tr style="border-top: 1px solid #d0d0d0">
                         <th>Date</th>
                         <th>Code OP</th>
                         <th>Nom OP</th>
@@ -13,11 +13,14 @@
                         <th>Montant(Ar)</th>
                         <th>Filière</th>
                         <th>Type appui</th>
+                        <th>Etat</th>
                         <th width="3%"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($appuiListe as $appui) { ?>
+                    <?php foreach($appuiListe as $appui) {
+                        $etat = getEtatAppui($appui->ID_APPUI_OP);
+                    ?>
                     <tr>
                         <td><?php echo $appui->DATE_SAISIE ?></td>
                         <td><?php echo $appui->CODE_OP ?></td>
@@ -26,80 +29,15 @@
                         <td><?php echo number_format($appui->MONTANT, 2, '.', ',')?></td>
                         <td><?php echo $appui->NOM_FILIERE ?></td>
                         <td><?php echo $appui->LIBELLE ?></td>
+                        <?php if($etat['etat']!=true){ ?>
+                        <td><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="<?php echo $etat['msg'] ?>"><i class="material-icons orange-text">assignment_late</i></a></td>
+                        <?php } else {?>
+                        <td><i class="material-icons green-text">assignment_turned_in</i></td>
+                        <?php } ?>
                         <td>
-                            <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $appui->ID_APPUI_OP?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
+                            <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $appui->ID_APPUI_OP?>"><i class="material-icons green-text">info_outline</i></a>
                         </td>
                     </tr>
-                    <?php } ?>
-                    <?php foreach($appuiListe as $appui) { ?>
-                        <tr>
-                            <td><?php echo $appui->DATE_SAISIE ?></td>
-                            <td><?php echo $appui->CODE_OP ?></td>
-                            <td><?php echo $appui->NOM_OP ?></td>
-                            <td><?php echo $appui->DATE_FINANCEMENT ?></td>
-                            <td><?php echo number_format($appui->MONTANT, 2, '.', ',')?></td>
-                            <td><?php echo $appui->NOM_FILIERE ?></td>
-                            <td><?php echo $appui->LIBELLE ?></td>
-                            <td>
-                                <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $appui->ID_APPUI_OP?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    <?php foreach($appuiListe as $appui) { ?>
-                        <tr>
-                            <td><?php echo $appui->DATE_SAISIE ?></td>
-                            <td><?php echo $appui->CODE_OP ?></td>
-                            <td><?php echo $appui->NOM_OP ?></td>
-                            <td><?php echo $appui->DATE_FINANCEMENT ?></td>
-                            <td><?php echo number_format($appui->MONTANT, 2, '.', ',')?></td>
-                            <td><?php echo $appui->NOM_FILIERE ?></td>
-                            <td><?php echo $appui->LIBELLE ?></td>
-                            <td>
-                                <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $appui->ID_APPUI_OP?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    <?php foreach($appuiListe as $appui) { ?>
-                        <tr>
-                            <td><?php echo $appui->DATE_SAISIE ?></td>
-                            <td><?php echo $appui->CODE_OP ?></td>
-                            <td><?php echo $appui->NOM_OP ?></td>
-                            <td><?php echo $appui->DATE_FINANCEMENT ?></td>
-                            <td><?php echo number_format($appui->MONTANT, 2, '.', ',')?></td>
-                            <td><?php echo $appui->NOM_FILIERE ?></td>
-                            <td><?php echo $appui->LIBELLE ?></td>
-                            <td>
-                                <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $appui->ID_APPUI_OP?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    <?php foreach($appuiListe as $appui) { ?>
-                        <tr>
-                            <td><?php echo $appui->DATE_SAISIE ?></td>
-                            <td><?php echo $appui->CODE_OP ?></td>
-                            <td><?php echo $appui->NOM_OP ?></td>
-                            <td><?php echo $appui->DATE_FINANCEMENT ?></td>
-                            <td><?php echo number_format($appui->MONTANT, 2, '.', ',')?></td>
-                            <td><?php echo $appui->NOM_FILIERE ?></td>
-                            <td><?php echo $appui->LIBELLE ?></td>
-                            <td>
-                                <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $appui->ID_APPUI_OP?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    <?php foreach($appuiListe as $appui) { ?>
-                        <tr>
-                            <td><?php echo $appui->DATE_SAISIE ?></td>
-                            <td><?php echo $appui->CODE_OP ?></td>
-                            <td><?php echo $appui->NOM_OP ?></td>
-                            <td><?php echo $appui->DATE_FINANCEMENT ?></td>
-                            <td><?php echo number_format($appui->MONTANT, 2, '.', ',')?></td>
-                            <td><?php echo $appui->NOM_FILIERE ?></td>
-                            <td><?php echo $appui->LIBELLE ?></td>
-                            <td>
-                                <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $appui->ID_APPUI_OP?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
-                            </td>
-                        </tr>
                     <?php } ?>
                     </tbody>
                 </table>
@@ -174,7 +112,6 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
-
     $(document).ready(function(){
         $('#liste_appui').DataTable({
             "language": {

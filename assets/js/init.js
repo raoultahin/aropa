@@ -2,7 +2,19 @@
  * Created by Andriamalala Raoul on 10/08/2017.
  */
 $(document).ready(function(){
-    $('.button-collapse').sideNav();
+    $('.button-collapse').sideNav({
+            onOpen: function(){
+                $('#sidenav-overlay').remove();
+                $('body').removeAttr('style');
+                $('header,main,footer').animate({ "padding-left": "235px" }, 300 );
+                $('#slide-out').addClass('fixed')
+                $('.drag-target').remove();
+            },
+            onClose: function(){
+                $('header,main,footer').animate({ "padding-left": "0" }, 150 );
+            }
+        }
+    );
     Materialize.updateTextFields();
 
     $('.modal').modal();

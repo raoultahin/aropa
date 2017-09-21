@@ -1,5 +1,8 @@
 <?php
-    if(isset($appui_op->ID_PARENT)) $parent = getOpParent($appui_op->ID_PARENT);
+    if(isset($appui_op->ID_PARENT)) {
+        $data = getOpParent($appui_op->ID_PARENT);
+        $parent = $data['op'];
+    }
 ?>
 <main xmlns="http://www.w3.org/1999/html">
     <div class="container1">
@@ -39,8 +42,8 @@
                         <label for="date_appui" class="blue-text">Date de financement</label>
                     </div>
                     <div class="input-field col s4">
-                        <input readonly value="<?php echo $detail_appui->MONTANT ?>" id="montant" type="text" class="black-text">
-                        <label for="montant" class="blue-text">Montant</label>
+                        <input readonly value="<?php echo number_format($detail_appui->MONTANT, 2, '.', ',') ?>" id="montant" type="text" class="black-text">
+                        <label for="montant" class="blue-text">Montant (Ar)</label>
                     </div>
                     <div class="input-field col s4">
                         <input readonly value="<?php echo $detail_appui->NOM_FILIERE ?>" id="filiere" type="text" class="black-text">
@@ -105,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <?php } ?>
+                <?php } if($appui_op->OBJET_NATURE!='' && $appui_op->OBJET_NATURE!=null) {?>
                 <div class="row">
                     <h5 class="green-text col s12">Détails Objet/nature offert</h5>
                     <div class="input-field col s8">
@@ -121,6 +124,7 @@
                         <input readonly id="unite" value="<?php echo $appui_op->UNITE?>" type="text" class="black-text" >
                     </div>
                 </div>
+                <?php } ?>
 
                 <div class="row">
                     <h5 class="green-text col s12">
@@ -156,7 +160,7 @@
                             <td><?php echo $beneficiaire->UNITE ?></td>
                             <td><?php echo $beneficiaire->QTE ?></td>
                             <td>
-                                <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $beneficiaire->ID_APPUI_OP?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
+                                <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $beneficiaire->ID_APPUI_OP?>"><i class="material-icons green-text">info_outline</i></a>
                             </td>
                         </tr>
                         <?php } ?>
@@ -193,7 +197,7 @@
                                     <td><?php echo $beneficiaire->UNITE ?></td>
                                     <td><?php echo $beneficiaire->QTE ?></td>
                                     <td>
-                                        <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $beneficiaire->ID_APPUI_OP?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
+                                        <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $beneficiaire->ID_APPUI_OP?>"><i class="material-icons green-text">info_outline</i></a>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -225,7 +229,7 @@
                                     <td><?php echo $beneficiaire->UNITE ?></td>
                                     <td><?php echo $beneficiaire->QTE ?></td>
                                     <td>
-                                        <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $beneficiaire->ID_APPUI_MENAGE?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
+                                        <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $beneficiaire->ID_APPUI_MENAGE?>"><i class="material-icons green-text">info_outline</i></a>
                                     </td>
                                 </tr>
                             <?php } ?>

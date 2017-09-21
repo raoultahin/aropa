@@ -84,7 +84,9 @@ function getOpParent($idAppui){
     if($appui->TYPE_OP==4) {
         $op = $CI->M_op->getOpById('opb', $appui->ID_OP, 'ID_OPB ID_OP, CODE_OPB CODE_OP, NOM_OPB NOM_OP');
     }
-    return $op;
+    $data['appui'] = $appui;
+    $data['op'] = $op;
+    return $data;
 }
 
 function getOpById($typeOp,$id){
@@ -158,4 +160,53 @@ function getNbEafAppuieByIdAppuiOpb($ci,$idAppui){
         else $n['F']++;
     }
     return $n;
+}
+
+function getEtatAppui($idAppui){
+    $CI = get_instance();
+    $CI->load->model('M_appui');
+    $appui = $CI->M_appui->getAppuiOpById($idAppui);
+
+    if($appui->TYPE_OP!=4) {
+        $qte = 0.;
+        $beneficiaires = $CI->M_appui->getBeneficiaireById($appui->ID_APPUI_OP);
+        if(count($beneficiaires)==0){
+            $etat['etat'] = false;
+            $etat['msg'] = 'Pas de bénéficiaire';
+            return $etat;
+        }
+        foreach($beneficiaires as $beneficiaire){
+            $qte += $beneficiaire->QTE;
+        }
+        if($appui->QTE==$qte){
+            $etat['etat'] = true;
+            return $etat;
+        }
+        else {
+            $etat['etat'] = false;
+            $etat['msg'] = 'Erreur de répartition de qte';
+            return $etat;
+        }
+    }
+    else{
+        $qte = 0;
+        $beneficiaires = $CI->M_appui->getEafBeneficiaireById($appui->ID_APPUI_OP);
+        if(count($beneficiaires)==0){
+            $etat['etat'] = false;
+            $etat['msg'] = 'Pas de bénéficiaire';
+            return $etat;
+        }
+        foreach($beneficiaires as $beneficiaire){
+            $qte += $beneficiaire->QTE;
+        }
+        if($appui->QTE==$qte){
+            $etat['etat'] = true;
+            return $etat;
+        }
+        else {
+            $etat['etat'] = false;
+            $etat['msg'] = 'Erreur de répartition de qte';
+            return $etat;
+        }
+    }
 }

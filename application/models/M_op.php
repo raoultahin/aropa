@@ -390,6 +390,7 @@
             $query = $this->db->query('SELECT SEXE FROM opb_menages JOIN menages ON menages.ID_MENAGE = opb_menages.ID_MENAGE WHERE ID_OPB = '.$idOpb);
             return $query->result();
         }
+
         public function getUnionOpbByIdUnion($idUnion){
             $query = $this->db->query('SELECT ID_OPB FROM union_opb WHERE ID_UNION = '.$idUnion);
             return $query->result();

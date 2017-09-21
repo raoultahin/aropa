@@ -1,7 +1,13 @@
 <?php
     $idParent = $this->input->get('parent',TRUE);
     $parent = null;
-    if($idParent!='') $parent = getOpParent($idParent);
+    $appui = null;
+    if($idParent!='') {
+        $data = getOpParent($idParent);
+        $appui = $data['appui'];
+        $parent = $data['op'];
+    }
+
 ?>
 <main xmlns="http://www.w3.org/1999/html">
     <div class="container1">
@@ -77,9 +83,21 @@
                         <div class="input-field col s12">
                             <select name="id_type_appui" class="browser-default" style="border: 1px solid darkgrey;">
                                 <option disabled selected value="">Type Appui</option>
-                                <?php foreach($types as $type){ ?>
-                                    <option value="<?php echo $type->ID_TYPE ?>"><?php echo $type->LIBELLE ?></option>
-                                <?php } ?>
+                                <?php
+                                    if(isset($parent)) {
+                                        foreach($types as $type) {
+                                            if($type->ID_TYPE == $appui->ID_TYPE) {
+                                ?>
+                                <option value="<?php echo $type->ID_TYPE ?>"><?php echo $type->LIBELLE ?></option>
+                                <?php
+                                            break;
+                                            }
+                                        }
+                                    } else {
+                                        foreach($types as $type) {
+                                ?>
+                                <option value="<?php echo $type->ID_TYPE ?>"><?php echo $type->LIBELLE ?></option>
+                                <?php } } ?>
                             </select>
 
                         </div>
@@ -152,7 +170,11 @@
                         <h5 class="green-text col s12">Détails Objet/nature offert</h5>
                         <div class="input-field col s8">
                             <label for="libelle" class="grey-text active">Libellé</label>
-                            <input id="libelle" type="text" name="objet_nature">
+                            <?php if(isset($parent)) {?>
+                                <input id="libelle" type="text" name="objet_nature" value="<?php echo $appui->OBJET_NATURE ?>">
+                            <?php } else {?>
+                                <input id="libelle" type="text" name="objet_nature">
+                            <?php } ?>
                         </div>
                         <div class="input-field col s2">
                             <label for="qte" class="grey-text">Quantité</label>
@@ -180,8 +202,8 @@
 <script type="text/javascript">
     var li = $('a[href="http://localhost/aropa/c_appui/new_appui"]').parent();
     li.addClass("active");
-    console.log(window.location.href);
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+    $('form')[0].reset();
 </script>

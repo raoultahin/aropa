@@ -19,12 +19,12 @@
     <header>
         <nav class="top-nav">
             <div style="padding-left: 20px">
+                <a href="#" data-activates="slide-out" class="button-collapse show-on-large "><i class="material-icons">menu</i></a>
                 <div class="nav-wrapper"><a class="page-title"><?php echo $titre ?></a></div>
             </div>
         </nav>
         <!-- side-nav -->
-        <a href="#" data-activates="slide-out" class="button-collapse top-nav full hide-on-large-only"><i class="material-icons">menu</i></a>
-        <ul id="slide-out" class="side-nav fixed blue-grey darken-3 collapsible" data-collapsible="accordion" style="overflow: auto;">
+        <ul id="slide-out" class="side-nav blue-grey darken-3 collapsible hide-on-small-only" data-collapsible="accordion" style="overflow: auto;">
             <div class="logo">
                 <img class="circle" src="<?php echo base_url(); ?>assets/images/logo-aropa.png" alt="logo"/>
             </div>
@@ -51,16 +51,7 @@
                 </div>
             </li>
             <li>
-                <a href="#!" class="waves-effect waves-light collapsible-header"><i class="material-icons left">chat</i>Gestion des Résutats</a>
-                <div class="collapsible-body">
-                    <ul>
-                        <li><a href="#!" >OPF</a></li>
-                        <li><a href="#!" >OPR</a></li>
-                        <li><a href="#!" >UNION</a></li>
-                        <li><a href="#!" >OPB</a></li>
-                        <li><a href="#!" >Ménages</a></li>
-                    </ul>
-                </div>
+                <a href="#!" class="waves-effect waves-light">Gestion des Résutats</a>
             </li>
 
         </ul>

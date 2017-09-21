@@ -154,12 +154,30 @@
             $data['type_appui'] = $this->M_appui->getTypeAppuiById($data['appui_op']->ID_TYPE);
             $data['cat_op'] = $this->M_appui->getCatOpById($data['appui_op']->ID_CAT_OP);
             $data['formation'] = $this->M_appui->getFormationById($data['appui_op']->ID_FORMATION);
-            $data['zone_intervention'] = $this->M_zone_intervention->getZoneInterventionByIdFkt($data['formation']->ID_FOKONTANY);
+            if(isset($data['formation']->ID_FOKONTANY)) {
+                $data['zone_intervention'] = $this->M_zone_intervention->getZoneInterventionByIdFkt($data['formation']->ID_FOKONTANY);
+            }
             if($data['appui_op']->TYPE_OP!='4') {
                 $data['beneficiaires'] = $this->M_appui->getBeneficiaireById($data['appui_op']->ID_APPUI_OP);
             }
             else {
                 $data['beneficiaires'] = $this->M_appui->getEafBeneficiaireById($data['appui_op']->ID_APPUI_OP);
+            }
+            $this->load->view('templates',$data);
+        }
+
+        public function fiche_appui_eaf($id=''){
+            $this->load->model('M_op');
+            $this->load->model('M_appui');
+            $this->load->model('M_zone_intervention');
+
+            $data['titre'] = 'Gestion des appuis';
+            $data['contents'] = 'fiche_appui_eaf';
+            $data['appui_eaf'] = $this->M_appui->getAppuiEafById($id);
+            $data['eaf'] = $this->M_op->getMenageById($data['appui_eaf']->ID_MENAGE);
+            $data['formation'] = $this->M_appui->getFormationById($data['appui_eaf']->ID_FORMATION);
+            if(isset($data['formation']->ID_FOKONTANY)) {
+                $data['zone_intervention'] = $this->M_zone_intervention->getZoneInterventionByIdFkt($data['formation']->ID_FOKONTANY);
             }
             $this->load->view('templates',$data);
         }

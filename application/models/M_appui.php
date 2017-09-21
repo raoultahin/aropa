@@ -5,6 +5,7 @@
             $query = $this->db->query('SELECT * FROM appui_opf UNION SELECT * FROM appui_opr UNION SELECT * FROM appui_union UNION SELECT * FROM appui_opb ORDER BY DATE_SAISIE DESC ');
             return $query->result();
         }
+
         public function getAppuiEafListe(){
             $this->db->select('*');
             $this->db->from('appui_menage');
@@ -17,6 +18,11 @@
 
         public function getAppuiOpById($id){
             $query = $this->db->get_where('appui_op', array('id_appui_op' => $id));
+            return $query->row();
+        }
+
+        public function getAppuiEafById($id){
+            $query = $this->db->get_where('appui_menage', array('id_appui_menage' => $id));
             return $query->row();
         }
 

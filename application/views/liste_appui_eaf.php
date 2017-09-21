@@ -29,7 +29,7 @@
                         <td><?php echo $appui->QTE ?></td>
                         <td><?php echo $appui->UNITE ?></td>
                         <td>
-                            <a href="<?php echo base_url()?>c_appui/fiche_appui_eaf/<?php echo $appui->ID_APPUI_MENAGE?>" class="waves-effect waves-light green btn"><i class="material-icons">info_outline</i></a>
+                            <a href="<?php echo base_url()?>c_appui/fiche_appui_eaf/<?php echo $appui->ID_APPUI_MENAGE?>"><i class="material-icons green-text">info_outline</i></a>
                         </td>
                     </tr>
                     <?php } ?>

@@ -5,7 +5,7 @@ body {
     padding: 20px 10px 5px 10px ;
 }
 header, main, footer {
-    padding-left: 240px;
+    padding-left: 0px;
 }
 
 @media only screen and (max-width : 992px) {
@@ -193,11 +193,11 @@ li>.btn-floating i {
     color: #4caf50;
 }
 /* label focus color */
-.input-field input[type=text]:focus + label, .input-field input[type=number]:focus + label {
+.input-field input[type=text]:focus + label, .input-field input[type=number]:focus + label{
     color: #4caf50;
 }
 /* label underline focus color */
-.input-field input[type=text]:focus, .input-field input[type=number]:focus, .input-field textarea.materialize-textarea:focus {
+.input-field input[type=text]:focus, .input-field input[type=number]:focus, .input-field textarea.materialize-textarea:focus, label>input[aria-controls=liste_appui]:focus:not([readonly]) {
     border-bottom: 1px solid #4caf50;
     box-shadow: 0 1px 0 0 #4caf50;
 }

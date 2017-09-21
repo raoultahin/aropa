@@ -1,7 +1,12 @@
 <?php
     $idParent = $this->input->get('parent',TRUE);
     $parent = null;
-    if($idParent!='') $parent = getOpParent($idParent);
+    $appui = null;
+    if($idParent!='') {
+        $data = getOpParent($idParent);
+        $appui = $data['appui'];
+        $parent = $data['op'];
+    }
 ?>
 <main xmlns="http://www.w3.org/1999/html">
     <div class="container1">
@@ -37,6 +42,7 @@
                             <input id="date_collecte" type="date" class="datepicker" name="date_collecte">
                         </div>
                     </div>
+                    <?php if(!isset($parent)||(isset($parent) && $appui->ID_FORMATION!=null)) {?>
                     <div id="detail_formation" class="row">
                         <h5 class="green-text col s12">Détail de la formation</h5>
                         <div class="input-field col s12">
@@ -78,11 +84,17 @@
                             </div>
                         </div>
                     </div>
+                    <?php } ?>
+                    <?php if(!isset($parent)||(isset($parent) && $appui->OBJET_NATURE!='')) {?>
                     <div class="row">
                         <h5 class="green-text col s12">Détails Objet/nature offert</h5>
                         <div class="input-field col s8">
                             <label for="libelle" class="grey-text active">Libellé</label>
+                            <?php if(isset($parent)) {?>
+                            <input id="libelle" type="text" name="objet_nature" value="<?php echo $appui->OBJET_NATURE ?>">
+                            <?php } else {?>
                             <input id="libelle" type="text" name="objet_nature">
+                            <?php } ?>
                         </div>
                         <div class="input-field col s2">
                             <label for="qte" class="grey-text">Quantité</label>
@@ -96,6 +108,7 @@
                             </select>
                         </div>
                     </div>
+                    <?php } ?>
                     <input type="submit" value="Valider" class="waves-effect green waves-light btn">
                 </form>
             </div>
@@ -113,4 +126,5 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+    $('form')[0].reset();
 </script>

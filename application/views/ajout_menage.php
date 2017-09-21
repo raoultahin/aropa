@@ -84,5 +84,6 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+    $('form')[0].reset();
 
 </script>
