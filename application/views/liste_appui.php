@@ -3,7 +3,7 @@
         <div class="row z-depth-1" style="margin-bottom: 80px;">
             <div class="col s12">
                 <h2 class="header">Liste des appuis effectués (OP) <a href="<?php echo base_url()?>c_appui/liste_appui_eaf" class="waves-effect blue waves-light btn right">Appui EAF</a></h2>
-                <table id="liste_appui" class="bordered striped">
+                <table id="liste" class="bordered striped">
                     <thead>
                     <tr style="border-top: 1px solid #d0d0d0">
                         <th>Date</th>
@@ -42,7 +42,7 @@
                     </tbody>
                 </table>
                 <div class="fixed-action-btn">
-                    <a href="#new_appui" class="btn-floating btn-large red">
+                    <a href="#new_appui" class="btn-floating btn-large red modal-trigger">
                         <i class="large material-icons">add</i>
                     </a>
                 </div>
@@ -113,7 +113,7 @@
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
     $(document).ready(function(){
-        $('#liste_appui').DataTable({
+        $('#liste').DataTable({
             "language": {
                 "lengthMenu": "Afficher _MENU_ ligne par page",
                 "zeroRecords": "Rien à afficher",
@@ -127,7 +127,7 @@
                 "sSearch":         "Rechercher&nbsp;:"
             },
             "drawCallback": function () {
-                $('#liste_appui_paginate a').addClass('waves-effect btn-flat');
+                $('#liste_paginate a').addClass('waves-effect btn-flat');
             }
         });
 

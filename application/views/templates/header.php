@@ -51,7 +51,7 @@
                 </div>
             </li>
             <li>
-                <a href="#!" class="waves-effect waves-light">Gestion des Résutats</a>
+                <a href="<?php echo base_url(); ?>c_resultat/liste_resultat" class="waves-effect waves-light no-child"><i class="material-icons left">sms</i>Gestion des Résutats</a>
             </li>
 
         </ul>

@@ -8208,6 +8208,7 @@ input[type=range]:focus::-ms-fill-upper {
   }
 }
 
+
 /* ==========================================================================
    $BASE-PICKER
    ========================================================================== */
@@ -8225,6 +8226,7 @@ input[type=range]:focus::-ms-fill-upper {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  outline: none;
 }
 
 /**
@@ -8273,6 +8275,7 @@ input[type=range]:focus::-ms-fill-upper {
  */
 .picker__holder {
   position: fixed;
+  -webkit-transition: background 0.15s ease-out, top 0s 0.15s;
   transition: background 0.15s ease-out, top 0s 0.15s;
   -webkit-backface-visibility: hidden;
 }
@@ -8284,12 +8287,13 @@ input[type=range]:focus::-ms-fill-upper {
   position: absolute;
   margin: 0 auto;
   min-width: 256px;
-  width: 350px;
+  width: 300px;
   max-height: 350px;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   -moz-opacity: 0;
   opacity: 0;
+  -webkit-transition: all 0.15s ease-out;
   transition: all 0.15s ease-out;
 }
 
@@ -8339,6 +8343,7 @@ input[type=range]:focus::-ms-fill-upper {
     border-top-color: #898989;
     border-bottom-width: 0;
     border-radius: 5px 5px 0 0;
+    -webkit-box-shadow: 0 12px 36px 16px rgba(0, 0, 0, 0.24);
     box-shadow: 0 12px 36px 16px rgba(0, 0, 0, 0.24);
   }
 }
@@ -8352,6 +8357,7 @@ input[type=range]:focus::-ms-fill-upper {
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#1E000000,endColorstr=#1E000000)";
   zoom: 1;
   background: rgba(0, 0, 0, 0.32);
+  -webkit-transition: background 0.15s ease-out;
   transition: background 0.15s ease-out;
 }
 
@@ -8382,13 +8388,26 @@ input[type=range]:focus::-ms-fill-upper {
 
 .picker__frame {
   margin: 0 auto;
-  max-width: 350px;
+  max-width: 325px;
 }
 
 @media (min-height: 38.875em) {
   .picker--opened .picker__frame {
     top: 10%;
     bottom: auto;
+  }
+}
+
+@media only screen and (min-width: 601px) {
+  .picker__box {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+  .picker__frame {
+    width: 80%;
+    max-width: 600px;
   }
 }
 
@@ -8399,7 +8418,9 @@ input[type=range]:focus::-ms-fill-upper {
  * The picker box.
  */
 .picker__box {
-  padding: 0 1em;
+  padding: 0;
+  border-radius: 2px;
+  overflow: hidden;
 }
 
 /**
@@ -8458,7 +8479,8 @@ input[type=range]:focus::-ms-fill-upper {
   padding: .5em 1.25em;
   width: 1em;
   height: 1em;
-  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
   top: -0.25em;
 }
 
@@ -8590,16 +8612,7 @@ input[type=range]:focus::-ms-fill-upper {
  * The footer containing the "today", "clear", and "close" buttons.
  */
 .picker__footer {
-  text-align: center;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  text-align: right;
 }
 
 .picker__button--today,
@@ -8683,54 +8696,70 @@ input[type=range]:focus::-ms-fill-upper {
 /* ==========================================================================
    CUSTOM MATERIALIZE STYLES
    ========================================================================== */
-.picker__box {
+/*.picker__box {
   border-radius: 2px;
   overflow: hidden;
+}*/
+.picker__date-display {
+  text-align: left;
+  background-color: #26a69a;
+  color: #fff;
+  padding: 18px;
+  font-weight: 300;
 }
 
-.picker__date-display {
-  text-align: center;
-  background-color: #4caf50;
-  color: #fff;
-  padding-bottom: 15px;
-  font-weight: 300;
+@media only screen and (min-width: 601px) {
+  .picker__date-display {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+  }
+  .picker__weekday-display {
+    display: block;
+  }
+  .picker__container__wrapper {
+    -webkit-box-flex: 2;
+    -webkit-flex: 2;
+        -ms-flex: 2;
+            flex: 2;
+  }
 }
 
 .picker__nav--prev:hover,
 .picker__nav--next:hover {
   cursor: pointer;
   color: #000000;
-  background: #81c784;
+  background: #a1ded8;
 }
 
 .picker__weekday-display {
-  background-color: #2e7d32;
-  padding: 10px;
-  font-weight: 200;
-  letter-spacing: .5;
-  font-size: 1rem;
-  margin-bottom: 15px;
+  font-weight: 500;
+  font-size: 2.8rem;
+  margin-right: 5px;
+  margin-top: 4px;
 }
 
 .picker__month-display {
-  text-transform: uppercase;
-  font-size: 2rem;
+  font-size: 2.8rem;
+  font-weight: 500;
 }
 
 .picker__day-display {
-  font-size: 4.5rem;
-  font-weight: 400;
+  font-size: 2.8rem;
+  font-weight: 500;
+  margin-right: 5px;
 }
 
 .picker__year-display {
-  font-size: 1.8rem;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.picker__box {
+/*.picker__box {
   padding: 0;
-}
-
+}*/
 .picker__calendar-container {
   padding: 0 1rem;
 }
@@ -8745,15 +8774,21 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .picker__day--infocus {
-  color: #595959;
-  letter-spacing: -.3;
-  padding: .75rem 0;
+  color: rgba(0, 0, 0, 0.87);
+  letter-spacing: -.3px;
+  padding: 0.75rem 0;
   font-weight: 400;
   border: 1px solid transparent;
 }
 
+@media only screen and (min-width: 601px) {
+  .picker__day--infocus {
+    padding: 1.1rem 0;
+  }
+}
+
 .picker__day.picker__day--today {
-  color: #4caf50;
+  color: #26a69a;
 }
 
 .picker__day.picker__day--today.picker__day--selected {
@@ -8770,14 +8805,14 @@ input[type=range]:focus::-ms-fill-upper {
   border-radius: 50%;
   -webkit-transform: scale(0.9);
           transform: scale(0.9);
-  background-color: #4caf50;
+  background-color: #26a69a;
   color: #ffffff;
 }
 
 .picker__day--selected.picker__day--outfocus,
 .picker__day--selected:hover.picker__day--outfocus,
 .picker--focused .picker__day--selected.picker__day--outfocus {
-  background-color: #81c784;
+  background-color: #a1ded8;
 }
 
 .picker__footer {
@@ -8785,10 +8820,15 @@ input[type=range]:focus::-ms-fill-upper {
   padding: 5px 10px;
 }
 
-.picker__close, .picker__today {
+.picker__close, .picker__today, .picker__clear {
   font-size: 1.1rem;
   padding: 0 1rem;
-  color: #4caf50;
+  color: #26a69a;
+}
+
+.picker__clear {
+  color: #f44336;
+  float: left;
 }
 
 .picker__nav--prev:before,
@@ -8809,7 +8849,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 button.picker__today:focus, button.picker__clear:focus, button.picker__close:focus {
-  background-color: #81c784;
+  background-color: #a1ded8;
 }
 
 /* ==========================================================================
@@ -8828,11 +8868,11 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
  * The times on the clock.
  */
 .picker__list-item {
-  border-bottom: 1px solid #dddddd;
-  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
   margin-bottom: -1px;
   position: relative;
-  background: #ffffff;
+  background: #fff;
   padding: .75em 1.25em;
 }
 
@@ -8845,7 +8885,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 /* Hovered time */
 .picker__list-item:hover {
   cursor: pointer;
-  color: #000000;
+  color: #000;
   background: #b1dcfb;
   border-color: #0089ec;
   z-index: 10;
@@ -8860,7 +8900,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 .picker__list-item--highlighted:hover,
 .picker--focused .picker__list-item--highlighted {
   cursor: pointer;
-  color: #000000;
+  color: #000;
   background: #b1dcfb;
 }
 
@@ -8869,7 +8909,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 .picker__list-item--selected:hover,
 .picker--focused .picker__list-item--selected {
   background: #0089ec;
-  color: #ffffff;
+  color: #fff;
   z-index: 10;
 }
 
@@ -8879,9 +8919,9 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 .picker--focused .picker__list-item--disabled {
   background: #f5f5f5;
   border-color: #f5f5f5;
-  color: #dddddd;
+  color: #ddd;
   cursor: default;
-  border-color: #dddddd;
+  border-color: #ddd;
   z-index: auto;
 }
 
@@ -8899,30 +8939,30 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   font-size: .67em;
   text-align: center;
   text-transform: uppercase;
-  color: #666;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .picker--time .picker__button--clear:hover,
 .picker--time .picker__button--clear:focus {
-  color: #000000;
+  color: #000;
   background: #b1dcfb;
   background: #ee2200;
   border-color: #ee2200;
   cursor: pointer;
-  color: #ffffff;
+  color: #fff;
   outline: none;
 }
 
 .picker--time .picker__button--clear:before {
   top: -0.25em;
-  color: #666;
+  color: rgba(0, 0, 0, 0.87);
   font-size: 1.25em;
   font-weight: bold;
 }
 
 .picker--time .picker__button--clear:hover:before,
 .picker--time .picker__button--clear:focus:before {
-  color: #ffffff;
+  color: #fff;
 }
 
 /* ==========================================================================
@@ -8949,4 +8989,158 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   .picker--time .picker__box {
     margin-bottom: 5em;
   }
+}
+
+/* ==========================================================================
+   $DEFAULT-TIME-PICKER
+   ========================================================================== */
+.clockpicker-display {
+  font-size: 4rem;
+  font-weight: bold;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+  clear: both;
+  position: relative;
+}
+
+.clockpicker-span-am-pm {
+  font-size: 1.3rem;
+  position: absolute;
+  right: 1rem;
+  bottom: 0.3rem;
+  line-height: 2rem;
+  font-weight: 500;
+}
+
+@media only screen and (min-width: 601px) {
+  .clockpicker-display {
+    top: 32%;
+  }
+  .clockpicker-span-am-pm {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    text-align: center;
+    margin-top: 1.2rem;
+  }
+}
+
+.text-primary {
+  color: white;
+}
+
+.clockpicker-span-hours {
+  margin-right: 3px;
+}
+
+.clockpicker-span-minutes {
+  margin-left: 3px;
+}
+
+.clockpicker-span-hours,
+.clockpicker-span-minutes,
+.clockpicker-span-am-pm div {
+  cursor: pointer;
+}
+
+.clockpicker-moving {
+  cursor: move;
+}
+
+.clockpicker-plate {
+  background-color: #eee;
+  border-radius: 50%;
+  width: 270px;
+  height: 270px;
+  overflow: visible;
+  position: relative;
+  margin: auto;
+  margin-top: 25px;
+  margin-bottom: 5px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.clockpicker-canvas,
+.clockpicker-dial {
+  width: 270px;
+  height: 270px;
+  position: absolute;
+  left: -1px;
+  top: -1px;
+}
+
+.clockpicker-minutes {
+  visibility: hidden;
+}
+
+.clockpicker-tick {
+  border-radius: 50%;
+  color: rgba(0, 0, 0, 0.87);
+  line-height: 40px;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.clockpicker-tick.active,
+.clockpicker-tick:hover {
+  background-color: rgba(38, 166, 154, 0.25);
+}
+
+.clockpicker-dial {
+  -webkit-transition: -webkit-transform 350ms, opacity 350ms;
+  -webkit-transition: opacity 350ms, -webkit-transform 350ms;
+  transition: opacity 350ms, -webkit-transform 350ms;
+  transition: transform 350ms, opacity 350ms;
+  transition: transform 350ms, opacity 350ms, -webkit-transform 350ms;
+}
+
+.clockpicker-dial-out {
+  opacity: 0;
+}
+
+.clockpicker-hours.clockpicker-dial-out {
+  -webkit-transform: scale(1.2, 1.2);
+  transform: scale(1.2, 1.2);
+}
+
+.clockpicker-minutes.clockpicker-dial-out {
+  -webkit-transform: scale(0.8, 0.8);
+  transform: scale(0.8, 0.8);
+}
+
+.clockpicker-canvas {
+  -webkit-transition: opacity 175ms;
+  transition: opacity 175ms;
+}
+
+.clockpicker-canvas-out {
+  opacity: 0.25;
+}
+
+.clockpicker-canvas-bearing {
+  stroke: none;
+  fill: #26a69a;
+}
+
+.clockpicker-canvas-bg {
+  stroke: none;
+  fill: #26a69a;
+}
+
+.clockpicker-canvas-bg-trans {
+  fill: #26a69a;
+}
+
+.clockpicker-canvas line {
+  stroke: #26a69a;
+  stroke-width: 4;
+  stroke-linecap: round;
+  /*shape-rendering: crispEdges;*/
 }

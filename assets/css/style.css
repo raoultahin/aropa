@@ -69,6 +69,12 @@ nav {
     color: #ffffff;
     background-color: #263238;
 }
+
+.side-nav li.active a.no-child, .side-nav li.active a.no-child>i {
+    color: #ffffff;
+    background-color: #00c863 !important;
+}
+
 .side-nav li.active a.collapsible-header > i, .side-nav li.active a.collapsible-header > i.material-icons {
     color: #ffffff;
 }
@@ -197,7 +203,7 @@ li>.btn-floating i {
     color: #4caf50;
 }
 /* label underline focus color */
-.input-field input[type=text]:focus, .input-field input[type=number]:focus, .input-field textarea.materialize-textarea:focus, label>input[aria-controls=liste_appui]:focus:not([readonly]) {
+.input-field input[type=text]:focus, .input-field input[type=number]:focus, .input-field textarea.materialize-textarea:focus, label>input[aria-controls=liste]:focus:not([readonly]) {
     border-bottom: 1px solid #4caf50;
     box-shadow: 0 1px 0 0 #4caf50;
 }
@@ -236,6 +242,17 @@ td a.btn {
 
 td.input-field {
     padding: 5px;
+}
+
+.btn-resultat{
+    height: 43px;
+    line-height: 43px;
+    padding: 0 1rem;
+}
+
+.btn-resultat > i{
+    font-size: 1.7rem;
+
 }
 
 /* main fin */

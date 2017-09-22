@@ -7,11 +7,11 @@ table.dataTable thead .sorting:after,table.dataTable thead .sorting_asc:after,ta
 table.dataTable thead .sorting_asc:before,table.dataTable thead .sorting_desc:after{opacity:1}
 table.dataTable thead .sorting_asc_disabled:before,table.dataTable thead .sorting_desc_disabled:after{opacity:0}
 
-select[name='liste_appui_length'] {
+select[name='liste_length'] {
     width: 60px;
     display: inline;
 }
-.dataTables_filter,#liste_appui_paginate{
+.dataTables_filter,#liste_paginate{
     float: right;
 }
 .dataTables_length,.dataTables_info{
@@ -20,21 +20,21 @@ select[name='liste_appui_length'] {
 .dataTables_filter>label>input{
     color: #000000;
 }
-#liste_appui_paginate,.dataTables_info{
+#liste_paginate,.dataTables_info{
     margin: 10px 0 5px 0;
 }
-#liste_appui_paginate span>a.current {
+#liste_paginate span>a.current {
     color: #ffffff;
     background-color: #039be5;
 }
-#liste_appui_paginate a {
+#liste_paginate a {
     font-size: 1.2rem;
     padding: 0 10px;
     border-radius: 2px;
     height: 30px;
     line-height: 1.7;
 }
-#liste_appui_previous i,#liste_appui_next i{
+#liste_previous i,#liste_next i{
     font-size: 2rem;
     line-height: 1;
 }
