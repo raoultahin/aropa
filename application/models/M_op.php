@@ -21,8 +21,6 @@
         }
 
         public function getOpFiliere($id,$op){
-            $table = $op;
-            if($op=='union') $table = 'tab_'.$op;
             $this->db->select('GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
             $this->db->from($op.'_filieres');
             $this->db->join('filieres','filieres.ID_FILIERE = '.$op.'_filieres.ID_FILIERE','left');

@@ -8702,7 +8702,7 @@ input[type=range]:focus::-ms-fill-upper {
 }*/
 .picker__date-display {
   text-align: left;
-  background-color: #26a69a;
+  background-color: #4caf50;
   color: #fff;
   padding: 18px;
   font-weight: 300;
@@ -8788,7 +8788,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .picker__day.picker__day--today {
-  color: #26a69a;
+  color: #4caf50;
 }
 
 .picker__day.picker__day--today.picker__day--selected {
@@ -8805,7 +8805,7 @@ input[type=range]:focus::-ms-fill-upper {
   border-radius: 50%;
   -webkit-transform: scale(0.9);
           transform: scale(0.9);
-  background-color: #26a69a;
+  background-color: #4caf50;
   color: #ffffff;
 }
 
@@ -8823,7 +8823,7 @@ input[type=range]:focus::-ms-fill-upper {
 .picker__close, .picker__today, .picker__clear {
   font-size: 1.1rem;
   padding: 0 1rem;
-  color: #26a69a;
+  color: #4caf50;
 }
 
 .picker__clear {

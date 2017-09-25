@@ -33,10 +33,18 @@
             echo json_encode($data['opbListe']);
         }
 
-        //membre opb
+        //ajout membre opb
         public function liste_eaf($idOpb){
             $this->load->model('M_op');
             $data['eafListe'] = $this->M_op->getEafListeNotIn($idOpb);
+
+            echo json_encode($data['eafListe']);
+        }
+
+        //membre opb (campagne)
+        public function liste_eaf_membre($idOpb){
+            $this->load->model('M_op');
+            $data['eafListe'] = $this->M_op->getOpbMembres($idOpb);
 
             echo json_encode($data['eafListe']);
         }
