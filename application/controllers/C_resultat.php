@@ -57,7 +57,7 @@
 
             if($idOpb!='' && $idFiliere!='' && $numCampagne!='' && $annee!='' && $dateCollecte!=''){
                 $this->M_resultat->insertCampagne($idOpb,$idFiliere,$numCampagne,$annee,$dateCollecte,$membres);
-                redirect('liste_resultat');
+                redirect('c_resultat/liste_resultat');
             }
         }
 
@@ -65,11 +65,14 @@
             $this->load->model('M_resultat');
 
             $id = $this->input->get('id');
-            if($id!='' && $id!=null && is_numeric($id)){
+            $idFiliere = $this->input->get('filiere');
+            $campagne = $this->input->get('campagne');
+            if($id!='' && $id!=null && is_numeric($id) && $idFiliere!='' && $idFiliere!=null && is_numeric($idFiliere) && $campagne!='' && $campagne!=null && is_numeric($campagne)){
                 $data['titre'] = 'Gestion des résultats';
                 $data['contents'] = 'fiche_resultat';
                 $data['id'] = $id;
-                $data['fiche'] = $this->M_resultat->getFicheResultatBy($op,$id,$annee);
+                $data['op'] = $op;
+                $data['fiche'] = $this->M_resultat->getFicheResultat($op,$id,$annee,$idFiliere,$campagne);
                 $this->load->view('templates',$data);
             }
         }

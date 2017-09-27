@@ -166,10 +166,10 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach($membres as $membre) { $nb = getNbrEafByIdOpb($membre->ID_OPB); ?>
+                        <?php foreach($membres as $membre) { $nb = getNbrEafByIdOpb($membre->ID_OP); ?>
                             <tr>
-                                <td><a href="<?php echo base_url()?>c_parametre/fiche_op/opb/<?php echo $membre->ID_OPB ?>"><?php echo $membre->CODE_OPB ?></a></td>
-                                <td><?php echo $membre->NOM_OPB ?></td>
+                                <td><a href="<?php echo base_url()?>c_parametre/fiche_op/opb/<?php echo $membre->ID_OP ?>"><?php echo $membre->CODE_OP ?></a></td>
+                                <td><?php echo $membre->NOM_OP ?></td>
                                 <td><?php echo $membre->TYPE ?></td>
                                 <td><?php echo $nb['nb'] ?></td>
                                 <td><?php echo $nb['H'] ?></td>

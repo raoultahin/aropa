@@ -28,6 +28,8 @@
                         <th>Code OP</th>
                         <th>Nom OP</th>
                         <th>Annee</th>
+                        <th>Filière</th>
+                        <th>Campagne</th>
                         <th>Fokontany</th>
                         <th>Commune</th>
                         <th>District</th>
@@ -41,12 +43,14 @@
                         <td><?php echo $resultat->CODE_OP ?></td>
                         <td><?php echo $resultat->NOM_OP ?></td>
                         <td><?php echo $resultat->ANNEE ?></td>
+                        <td><?php echo $resultat->NOM_FILIERE ?></td>
+                        <td><?php echo $resultat->NUM_CAMPAGNE ?></td>
                         <td><?php echo $resultat->NOM_FOKONTANY ?></td>
                         <td><?php echo $resultat->NOM_COMMUNE ?></td>
                         <td><?php echo $resultat->NOM_DISTRICT ?></td>
                         <td><?php echo $resultat->NOM_REGION ?></td>
                         <td>
-                            <a href="<?php echo base_url()?>c_resultat/fiche_resultat/<?php echo $resultat->ANNEE .'/'.$op .'?id='. $resultat->ID_OP ?>"><i class="material-icons green-text">info_outline</i></a>
+                            <a href="<?php echo base_url()?>c_resultat/fiche_resultat/<?php echo $resultat->ANNEE .'/'.$op .'?id='. $resultat->ID_OP.'&filiere='.$resultat->ID_FILIERE.'&campagne='.$resultat->NUM_CAMPAGNE?>"><i class="material-icons green-text">info_outline</i></a>
                         </td>
                     </tr>
                     <?php } ?>

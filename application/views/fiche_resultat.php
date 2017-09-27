@@ -14,12 +14,15 @@
                         <label for="annee" class="grey-text">Année :</label>
                         <input id="annee" type="text" value="<?php echo $fiche[0]->ANNEE?>" readonly>
                     </div>
+                    <?php if(isset($fiche[0]->DATE_COLLECTE)){?>
                     <div class="input-field col s2">
                         <label for="date_collecte" class="grey-text active">Date de Collecte</label>
                         <input id="date_collecte" type="text" value="<?php echo date("d/m/Y", strtotime($fiche[0]->DATE_COLLECTE));?>" readonly>
                     </div>
+                    <?php } ?>
                 </div>
                 <div class="row">
+                    <?php if(isset($fiche[0]->NUM_CAMPAGNE)){?>
                     <div class="input-field col s4">
                         Campagne :
                         <input <?php if($fiche[0]->NUM_CAMPAGNE == 1) echo 'checked' ?> class="with-gap" name="campagne" type="radio" id="num1" value="1"/>
@@ -27,6 +30,7 @@
                         <input <?php if($fiche[0]->NUM_CAMPAGNE == 2) echo 'checked' ?> class="with-gap" name="campagne" type="radio" id="num2" value="2"/>
                         <label class="grey-text" style="top: 0" for="num2">2</label>
                     </div>
+                    <?php } ?>
                     <div class="input-field col s4">
                         <select class="browser-default" style="border: 1px solid darkgrey;">
                             <option disabled>Filière</option>
@@ -34,6 +38,7 @@
                         </select>
                     </div>
                 </div>
+                <?php if($op=='opb'){?>
                 <table class="bordered striped">
                     <thead >
                     <tr>
@@ -74,6 +79,127 @@
                     </tr>
                     </tbody>
                 </table>
+                <?php } ?>
+                <?php if($op=='union'){?>
+                    <table class="bordered striped">
+                        <thead >
+                        <tr>
+                            <th>Code OPB</th>
+                            <th>Nom OPB</th>
+                            <th>Superficie (Ares)</th>
+                            <th>Qte produite (Kg)</th>
+                            <th>Qte commercialisée (Kg)</th>
+                            <th>Montant reçu (Ariary)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $S = 0;$qteP=0;$qteC=0;$M=0;
+                        foreach($fiche as $f) {
+                            $S += $f->SUPERFICIE;
+                            $qteP += $f->QTE_PRODUITE;
+                            $qteC += $f->QTE_COMMERCIALISEE;
+                            $M += $f->MONTANT;
+                            ?>
+                            <tr>
+                                <td><?php echo $f->CODE_OPB ?></td>
+                                <td><?php echo $f->NOM_OPB ?></td>
+                                <td><?php echo $f->SUPERFICIE ?></td>
+                                <td><?php echo $f->QTE_PRODUITE ?></td>
+                                <td><?php echo $f->QTE_COMMERCIALISEE ?></td>
+                                <td><?php echo number_format($f->MONTANT, 2, '.', ',') ?></td>
+                            </tr>
+                        <?php } ?>
+                        <tr>
+                            <td colspan="2"><b>TOTAL</b></td>
+                            <td><?php echo number_format($S, 2, '.', ',') ?></td>
+                            <td><?php echo number_format($qteP, 2, '.', ',') ?></td>
+                            <td><?php echo number_format($qteC, 2, '.', ',') ?></td>
+                            <td><?php echo number_format($M, 2, '.', ',') ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                <?php } ?>
+                <?php if($op=='opr'){?>
+                    <table class="bordered striped">
+                        <thead >
+                        <tr>
+                            <th>Code OPB/UNION</th>
+                            <th>Nom OP/UNION</th>
+                            <th>Superficie (Ares)</th>
+                            <th>Qte produite (Kg)</th>
+                            <th>Qte commercialisée (Kg)</th>
+                            <th>Montant reçu (Ariary)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $S = 0;$qteP=0;$qteC=0;$M=0;
+                        foreach($fiche as $f) {
+                            $S += $f->SUPERFICIE;
+                            $qteP += $f->QTE_PRODUITE;
+                            $qteC += $f->QTE_COMMERCIALISEE;
+                            $M += $f->MONTANT;
+                            ?>
+                            <tr>
+                                <td><?php echo $f->CODE_OPB ?></td>
+                                <td><?php echo $f->NOM_OPB ?></td>
+                                <td><?php echo $f->SUPERFICIE ?></td>
+                                <td><?php echo $f->QTE_PRODUITE ?></td>
+                                <td><?php echo $f->QTE_COMMERCIALISEE ?></td>
+                                <td><?php echo number_format($f->MONTANT, 2, '.', ',') ?></td>
+                            </tr>
+                        <?php } ?>
+                        <tr>
+                            <td colspan="2"><b>TOTAL</b></td>
+                            <td><?php echo number_format($S, 2, '.', ',') ?></td>
+                            <td><?php echo number_format($qteP, 2, '.', ',') ?></td>
+                            <td><?php echo number_format($qteC, 2, '.', ',') ?></td>
+                            <td><?php echo number_format($M, 2, '.', ',') ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                <?php } ?>
+                <?php if($op=='opf'){?>
+                    <table class="bordered striped">
+                        <thead >
+                        <tr>
+                            <th>Code OPR</th>
+                            <th>Nom OPR</th>
+                            <th>Superficie (Ares)</th>
+                            <th>Qte produite (Kg)</th>
+                            <th>Qte commercialisée (Kg)</th>
+                            <th>Montant reçu (Ariary)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $S = 0;$qteP=0;$qteC=0;$M=0;
+                        foreach($fiche as $f) {
+                            $S += $f->SUPERFICIE;
+                            $qteP += $f->QTE_PRODUITE;
+                            $qteC += $f->QTE_COMMERCIALISEE;
+                            $M += $f->MONTANT;
+                            ?>
+                            <tr>
+                                <td><?php echo $f->CODE_OPR ?></td>
+                                <td><?php echo $f->NOM_OPR ?></td>
+                                <td><?php echo $f->SUPERFICIE ?></td>
+                                <td><?php echo $f->QTE_PRODUITE ?></td>
+                                <td><?php echo $f->QTE_COMMERCIALISEE ?></td>
+                                <td><?php echo number_format($f->MONTANT, 2, '.', ',') ?></td>
+                            </tr>
+                        <?php } ?>
+                        <tr>
+                            <td colspan="2"><b>TOTAL</b></td>
+                            <td><?php echo number_format($S, 2, '.', ',') ?></td>
+                            <td><?php echo number_format($qteP, 2, '.', ',') ?></td>
+                            <td><?php echo number_format($qteC, 2, '.', ',') ?></td>
+                            <td><?php echo number_format($M, 2, '.', ',') ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                <?php } ?>
             </div>
         </div>
     </div>
