@@ -40,7 +40,7 @@
                     $data['op'] = strtoupper($op);
                     $data['regions'] = $this->M_zone_intervention->getRegion();
                     $data['opLigne'] = $this->M_op->getOpById($op,$id,$column);
-                    $data['filieres'] = $this->M_filiere->getFilieres();
+                    $data['filieres'] = $this->M_filiere->getObpFiliere($id);
                     $data['types'] = $this->M_appui->getTypeAppui();
                     $data['contents'] = 'form_appui_op';
                     if ($op == 'opb') {

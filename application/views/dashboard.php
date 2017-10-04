@@ -1,8 +1,13 @@
 <main>
     <div class="container1">
-        <div class="row z-depth-1">
+        <div class="row z-depth-1" style="margin-bottom: 80px;">
             <div class="col s12">
                 <h2 class="header">Zone d'intervention </h2>
+                <div class="row">
+                    <div class="col s6">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col s6 m3">
                         <a href="<?php echo base_url(); ?>c_parametre/liste_region">
@@ -284,12 +289,36 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/Chart.min.js"></script>
 
 <script type="text/javascript">
-    var li = $('a[href="http://localhost/aropa/c_parametre/zone_intervention"]').parent();
+    var li = $('a[href="http://localhost/aropa/c_sortie"]').parent();
     li.addClass("active");
     console.log(window.location.href);
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 16, 3],
+                backgroundColor: 'rgba(255, 99, 132, 0.0)',
+                borderColor: 'rgba(255, 99, 132, 0.7)'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
 </script>

@@ -28,9 +28,23 @@
             <div class="logo">
                 <img class="circle" src="<?php echo base_url(); ?>assets/images/logo-aropa.png" alt="logo"/>
             </div>
-            <li ><a href="#!" class="waves-effect waves-light"><i class="material-icons left">today</i>Dashboard</a></li>
             <li>
-                <a href="#!" class="waves-effect waves-light collapsible-header"><i class="material-icons left">mode_edit</i>Paramétrage</a>
+                <a href="<?php echo base_url(); ?>c_sortie" class="waves-effect waves-light no-child"><i class="material-icons left">dashboard</i>Accueil</a>
+            </li>
+
+            <li>
+                <a href="#!" class="waves-effect waves-light collapsible-header"><i class="material-icons left">share</i>Gestion des Appuis</a>
+                <div class="collapsible-body">
+                    <ul>
+                        <li><a href="<?php echo base_url(); ?>c_appui/liste_appui" >Liste des appuis</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="<?php echo base_url(); ?>c_resultat/liste_resultat" class="waves-effect waves-light no-child"><i class="material-icons left">trending_up</i>Gestion des Résutats</a>
+            </li>
+            <li>
+                <a href="#!" class="waves-effect waves-light collapsible-header"><i class="material-icons left">settings_applications</i>Paramétrage</a>
                 <div class="collapsible-body">
                     <ul>
                         <li><a href="<?php echo base_url(); ?>c_parametre/zone_intervention">Zone d'intervention</a></li>
@@ -41,17 +55,6 @@
                         <li><a href="<?php echo base_url(); ?>c_parametre/liste_menage" >EAF</a></li>
                     </ul>
                 </div>
-            </li>
-            <li>
-                <a href="#!" class="waves-effect waves-light collapsible-header"><i class="material-icons left">work</i>Gestion des Appuis</a>
-                <div class="collapsible-body">
-                    <ul>
-                        <li><a href="<?php echo base_url(); ?>c_appui/liste_appui" >Liste des appuis</a></li>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <a href="<?php echo base_url(); ?>c_resultat/liste_resultat" class="waves-effect waves-light no-child"><i class="material-icons left">sms</i>Gestion des Résutats</a>
             </li>
 
         </ul>

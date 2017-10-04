@@ -59,9 +59,15 @@ function getNbrEafByIdOpb($idOpb){
     $n['nb'] = count($array);
     $n['H'] = 0;
     $n['F'] = 0;
+    $n['eaf1'] = 0;
+    $n['eaf2'] = 0;
+    $n['eaf3'] = 0;
     foreach($array as $row) {
         if($row->SEXE=='H') $n['H']++;
-        else $n['F']++;
+        if($row->SEXE=='F') $n['F']++;
+        if($row->TYPE==1) $n['eaf1']++;
+        if($row->TYPE==2) $n['eaf2']++;
+        if($row->TYPE==3) $n['eaf3']++;
     }
     return $n;
 }

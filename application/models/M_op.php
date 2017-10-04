@@ -385,7 +385,7 @@
         }
 
         public function getOpbEafByIdOpb($idOpb){
-            $query = $this->db->query('SELECT SEXE FROM opb_menages JOIN menages ON menages.ID_MENAGE = opb_menages.ID_MENAGE WHERE ID_OPB = '.$idOpb);
+            $query = $this->db->query('SELECT SEXE,menages.TYPE FROM opb_menages JOIN menages ON menages.ID_MENAGE = opb_menages.ID_MENAGE WHERE ID_OPB = '.$idOpb);
             return $query->result();
         }
 

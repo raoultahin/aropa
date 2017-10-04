@@ -25,7 +25,7 @@
                     </tbody>
                 </table>
                 <div class="fixed-action-btn">
-                    <a href="#add_district" class="btn-floating btn-large red">
+                    <a href="#add_district" class="btn-floating btn-large red modal-trigger">
                         <i class="large material-icons">add</i>
                     </a>
                 </div>
