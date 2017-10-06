@@ -1,9 +1,9 @@
 <main>
     <div class="container1">
-        <div class="row z-depth-1">
+        <div class="row z-depth-1" style="margin-bottom: 80px;">
             <div class="col s12">
                 <h2 class="header">Liste des District </h2>
-                <table class="responsive-table bordered striped">
+                <table id="liste" class="bordered striped">
                     <thead>
                     <tr>
                         <th>Code</th>
@@ -117,6 +117,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/crud_district.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datatables.min.js"></script>
 <script type="text/javascript">
     var li = $('a[href="http://localhost/aropa/c_parametre/zone_intervention"]').parent();
     li.addClass("active");
@@ -124,4 +125,27 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+
+    $(document).ready(function(){
+        $('#liste').DataTable({
+            "language": {
+                "lengthMenu": "Afficher _MENU_ ligne par page",
+                "zeroRecords": "Rien à afficher",
+                "info": "<b>Total: _TOTAL_</b> enregistrements",
+                "sInfoEmpty":      "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
+                "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "oPaginate": {
+                    "sPrevious":   "<i class='material-icons'>chevron_left</i>",
+                    "sNext":       "<i class='material-icons'>chevron_right</i>"
+                },
+                "sSearch":         "Rechercher&nbsp;:"
+            },
+            "drawCallback": function () {
+                $('#liste_paginate a').addClass('waves-effect btn-flat');
+            }
+        });
+
+        $('select').addClass('browser-default');
+
+    });
 </script>

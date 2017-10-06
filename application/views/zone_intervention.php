@@ -1,13 +1,13 @@
 <main>
     <div class="container1">
-        <div class="row z-depth-1">
+        <div class="row z-depth-1" style="margin-bottom: 80px;">
             <div class="col s12">
                 <h2 class="header">Zone d'intervention </h2>
                 <div class="row">
                     <div class="col s6 m3">
                         <a href="<?php echo base_url(); ?>c_parametre/liste_region">
                             <div class="my-card card-panel red waves-effect waves-light  center-align">
-                              <div class="white-text isa">5</div>
+                              <div class="white-text isa"><?php echo count($regions)?></div>
                               <span class="white-text soratra">Région</span>
                             </div>
                         </a>
@@ -15,7 +15,7 @@
                     <div class="col s6 m3">
                         <a href="<?php echo base_url(); ?>c_parametre/liste_district">
                             <div class="my-card card-panel orange waves-effect waves-light center-align">
-                                <div class="white-text isa">15</div>
+                                <div class="white-text isa"><?php echo $nb->NB_DISTRICT?></div>
                                 <span class="white-text soratra">District</span>
                             </div>
                         </a>
@@ -23,7 +23,7 @@
                     <div class="col s6 m3">
                         <a href="<?php echo base_url(); ?>c_parametre/liste_commune">
                             <div class="my-card card-panel green waves-effect waves-light center-align">
-                                <div class="white-text isa">170</div>
+                                <div class="white-text isa"><?php echo $nb->NB_COMMUNE?></div>
                                 <span class="white-text soratra">Commune</span>
                             </div>
                         </a>
@@ -31,13 +31,13 @@
                     <div class="col s6 m3">
                         <a href="<?php echo base_url(); ?>c_parametre/liste_fokontany">
                             <div class="my-card card-panel blue waves-effect waves-light center-align">
-                                <div class="white-text isa">500</div>
+                                <div class="white-text isa"><?php echo $nb->NB_FOKONTANY?></div>
                                 <span class="white-text soratra">Fokontany</span>
                             </div>
                         </a>
                     </div>
                 </div>
-                <table class="responsive-table bordered striped">
+                <table id="liste" class="bordered striped">
                     <thead>
                     <tr>
                         <th>Région</th>
@@ -46,26 +46,13 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <?php foreach($zoneIntervention as $zi) {?>
                     <tr>
-                        <td>Alvin</td>
-                        <td>Eclair</td>
-                        <td>$0.87</td>
+                        <td><?php echo $zi->NOM_REGION ?></td>
+                        <td><?php echo $zi->NOM_DISTRICT ?></td>
+                        <td><?php echo $zi->NOM_COMMUNE ?></td>
                     </tr>
-                    <tr>
-                        <td>Alan</td>
-                        <td>Jellybean</td>
-                        <td>$3.76</td>
-                    </tr>
-                    <tr>
-                        <td>Jonathan</td>
-                        <td>Lollipop</td>
-                        <td>$7.00</td>
-                    </tr>
-                    <tr>
-                        <td>Shannon</td>
-                        <td>KitKat</td>
-                        <td>$9.99</td>
-                    </tr>
+                    <?php } ?>
                     </tbody>
                 </table>
 
@@ -234,7 +221,7 @@
                             <td>Code du district:</td>
                             <td>
                                 <div class="input-field inline" style="width:85%;">
-                                    <input type="text" name="Code_district">
+                                    <input type="text" name="code_district">
                                 </div>
                             </td>
                         </tr>
@@ -284,6 +271,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datatables.min.js"></script>
 
 <script type="text/javascript">
     var li = $('a[href="http://localhost/aropa/c_parametre/zone_intervention"]').parent();
@@ -292,4 +280,27 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+
+    $(document).ready(function(){
+        $('#liste').DataTable({
+            "language": {
+                "lengthMenu": "Afficher _MENU_ ligne par page",
+                "zeroRecords": "Rien à afficher",
+                "info": "<b>Total: _TOTAL_</b> enregistrements",
+                "sInfoEmpty":      "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
+                "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "oPaginate": {
+                    "sPrevious":   "<i class='material-icons'>chevron_left</i>",
+                    "sNext":       "<i class='material-icons'>chevron_right</i>"
+                },
+                "sSearch":         "Rechercher&nbsp;:"
+            },
+            "drawCallback": function () {
+                $('#liste_paginate a').addClass('waves-effect btn-flat');
+            }
+        });
+
+        $('select').addClass('browser-default');
+
+    });
 </script>

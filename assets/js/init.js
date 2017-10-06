@@ -30,6 +30,8 @@ $(document).ready(function(){
 $(document).on('change','select[name="id_region"]', function () {
     var id_region = $(this).val();
     $('select[name="id_district"]').html('<option value="" disabled selected>Choisir une district</option>');
+    $('select[name="id_commune"]').html('<option value="" disabled selected>Choisir une commune</option>');
+    $('select[name="id_fokontany"]').html('<option value="" disabled selected>Choisir une Fokontany</option>');
     $.ajax({
         url : 'http://localhost/aropa/c_parametre/liste_district_by_region/'+id_region,
         type : 'GET',
@@ -48,6 +50,7 @@ $(document).on('change','select[name="id_region"]', function () {
 $(document).on('change','select[name="id_district"]', function () {
     var id_district = $(this).val();
     $('select[name="id_commune"]').html('<option value="" disabled selected>Choisir une commune</option>');
+    $('select[name="id_fokontany"]').html('<option value="" disabled selected>Choisir une Fokontany</option>');
     $.ajax({
         url : 'http://localhost/aropa/c_parametre/liste_commune_by_district/'+id_district,
         type : 'GET',

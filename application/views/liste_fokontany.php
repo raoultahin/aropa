@@ -1,9 +1,9 @@
 <main>
     <div class="container1">
-        <div class="row z-depth-1">
+        <div class="row z-depth-1" style="margin-bottom: 80px">
             <div class="col s12">
-                <h2 class="header">Liste des Fokontany </h2>
-                <table class="responsive-table bordered striped">
+                <h2 class="header">Liste des Fokontany <a href="#importer" class="modal-trigger waves-effect waves-light btn blue">Importer</a> </h2>
+                <table id="liste" class="bordered striped">
                     <thead>
                     <tr>
                         <th>Code</th>
@@ -32,6 +32,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal import fokontany -->
+    <div id="importer" class="modal" style="width: 50%">
+        <form method="post" action="<?php echo base_url(); ?>c_parametre/importer_fokontany" enctype="multipart/form-data">
+            <div class="modal-content center-align">
+                <h5 class="green-text"> Importer fokontany (CSV)</h5>
+                <div class="divider"></div>
+                <div class="file-field input-field">
+                    <div class="btn blue">
+                        <span>File</span>
+                        <input type="file" name="csv">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="width: 100% !important;">
+                <button type="button" class="modal-action modal-close red waves-effect waves-light btn">Fermer</button>
+                <button type="submit" class="waves-effect green waves-light btn">Importer</button>
+            </div>
+        </form>
+    </div>
+
     <!-- Modal add fokontany -->
     <div id="add_fokontany" class="modal">
         <form method="post" action="<?php echo base_url(); ?>c_parametre/insert_fokontany">
@@ -141,6 +165,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/crud_fokontany.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datatables.min.js"></script>
 <script type="text/javascript">
     var li = $('a[href="http://localhost/aropa/c_parametre/zone_intervention"]').parent();
     li.addClass("active");
@@ -148,4 +173,27 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+
+    $(document).ready(function(){
+        $('#liste').DataTable({
+            "language": {
+                "lengthMenu": "Afficher _MENU_ ligne par page",
+                "zeroRecords": "Rien à afficher",
+                "info": "<b>Total: _TOTAL_</b> enregistrements",
+                "sInfoEmpty":      "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
+                "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "oPaginate": {
+                    "sPrevious":   "<i class='material-icons'>chevron_left</i>",
+                    "sNext":       "<i class='material-icons'>chevron_right</i>"
+                },
+                "sSearch":         "Rechercher&nbsp;:"
+            },
+            "drawCallback": function () {
+                $('#liste_paginate a').addClass('waves-effect btn-flat');
+            }
+        });
+
+        $('select').addClass('browser-default');
+
+    });
 </script>

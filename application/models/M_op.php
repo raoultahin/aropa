@@ -61,8 +61,41 @@
             return $this->insertOpfFilieres($this->db->insert_id(),$filiereListe);
         }
 
+        public function updateOpf($idFokontany,$nomOpf,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$id){
+            $data = array(
+                'id_fokontany' => $idFokontany,
+                'nom_opf' => $nomOpf,
+                'date_creation' => $dateCreation,
+                'statut' => $statut,
+                'formelle' => $formelle,
+                'id_representant' => $representant,
+                'contact' => $contact,
+                'observation' => $observation
+            );
+            $this->db->where('ID_OPF',$id);
+            if(! $this->db->update('opf', $data)){
+                return $this->db->error();
+            }
+            return $this->updateOpfFilieres($id,$filiereListe);
+        }
+
         public function insertOpfFilieres($idOpf,$filiereListe){
             if(isset($filiereListe) && count($filiereListe)!=0) {
+                foreach ($filiereListe as $idFiliere) {
+                    $data = array(
+                        'id_opf' => $idOpf,
+                        'id_filiere' => $idFiliere
+                    );
+                    if(! $this->db->insert('opf_filieres', $data)){
+                        return $this->db->error();
+                    }
+                }
+            }
+        }
+
+        public function updateOpfFilieres($idOpf,$filiereListe){
+            if(isset($filiereListe) && count($filiereListe)!=0) {
+                $this->db->delete('opf_filieres', array('ID_OPF' => $idOpf));
                 foreach ($filiereListe as $idFiliere) {
                     $data = array(
                         'id_opf' => $idOpf,
@@ -82,6 +115,13 @@
             $this->db->where('ID_OPF',$idOpf);
             $query = $this->db->get();
             return $query->result();
+        }
+
+        public function deleteOpf($idOpf){
+            $this->db->where('ID_OPF', $idOpf);
+            if(! $this->db->delete('opf')) {
+                return $this->db->error();
+            }
         }
 
         //opr
@@ -123,6 +163,24 @@
             return $this->insertOprFilieres($this->db->insert_id(),$filiereListe);
         }
 
+        public function updateOpr($idFokontany,$nomOpr,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$id){
+            $data = array(
+                'id_fokontany' => $idFokontany,
+                'nom_opr' => $nomOpr,
+                'date_creation' => $dateCreation,
+                'statut' => $statut,
+                'formelle' => $formelle,
+                'id_representant' => $representant,
+                'contact' => $contact,
+                'observation' => $observation
+            );
+            $this->db->where('ID_OPR',$id);
+            if(! $this->db->update('opr', $data)){
+                return $this->db->error();
+            }
+            return $this->updateOprFilieres($id,$filiereListe);
+        }
+
         public function insertOprMembre($idOpr,$membres){
             foreach($membres as $membre) {
                 $codeId = explode(":",$membre);
@@ -143,6 +201,22 @@
 
         public function insertOprFilieres($idOpr,$filiereListe){
             if(isset($filiereListe) && count($filiereListe)!=0) {
+                foreach ($filiereListe as $idFiliere) {
+                    $data = array(
+                        'id_opr' => $idOpr,
+                        'id_filiere' => $idFiliere
+                    );
+                    if(! $this->db->insert('opr_filieres', $data)){
+                        return $this->db->error();
+                    }
+                }
+            }
+        }
+
+        public function updateOprFilieres($idOpr,$filiereListe){
+            if(isset($filiereListe) && count($filiereListe)!=0) {
+                $this->db->delete('opr_filieres', array('ID_OPR' => $idOpr));
+
                 foreach ($filiereListe as $idFiliere) {
                     $data = array(
                         'id_opr' => $idOpr,
@@ -176,8 +250,14 @@
             $this->db->join('zone_intervention', 'zone_intervention.ID_FOKONTANY = tab_union.ID_FOKONTANY');
             $this->db->where('ID_OPR',$idOpr);
             $union = $this->db->get_compiled_select();
-
             return $this->db->query($opb . ' UNION ' . $union)->result();
+        }
+
+        public function deleteOpr($idOpr){
+            $this->db->where('ID_OPR', $idOpr);
+            if(! $this->db->delete('opr')) {
+                return $this->db->error();
+            }
         }
 
         //UNION
@@ -191,7 +271,7 @@
             return $query->result();
         }
 
-        public function insertUnion($idFokontany,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type){
+        public function insertUnion($idFokontany,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe){
             $count = $this->db->count_all('tab_union')+1;
             $codeUnion = 'U'.str_pad($count,2,0,STR_PAD_LEFT);
             $data = array(
@@ -203,8 +283,7 @@
                 'formelle' => $formelle,
                 'id_representant' => $representant,
                 'contact' => $contact,
-                'observation' => $observation,
-                'type' => $type
+                'observation' => $observation
             );
             if(! $this->db->insert('tab_union', $data)){
                 return $this->db->error();
@@ -212,8 +291,41 @@
             return $this->insertUnionFilieres($this->db->insert_id(),$filiereListe);
         }
 
+        public function updateUnion($idFokontany,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$id){
+            $data = array(
+                'id_fokontany' => $idFokontany,
+                'nom_union' => $nomUnion,
+                'date_creation' => $dateCreation,
+                'statut' => $statut,
+                'formelle' => $formelle,
+                'id_representant' => $representant,
+                'contact' => $contact,
+                'observation' => $observation
+            );
+            $this->db->where('ID_UNION',$id);
+            if(! $this->db->update('tab_union', $data)){
+                return $this->db->error();
+            }
+            return $this->updateUnionFilieres($id,$filiereListe);
+        }
+
         public function insertUnionFilieres($idUnion,$filiereListe){
             if(isset($filiereListe) && count($filiereListe)!=0) {
+                foreach ($filiereListe as $idFiliere) {
+                    $data = array(
+                        'id_union' => $idUnion,
+                        'id_filiere' => $idFiliere
+                    );
+                    if(! $this->db->insert('union_filieres', $data)){
+                        return $this->db->error();
+                    }
+                }
+            }
+        }
+
+        public function updateUnionFilieres($idUnion,$filiereListe){
+            if(isset($filiereListe) && count($filiereListe)!=0) {
+                $this->db->delete('union_filieres', array('ID_UNION' => $idUnion));
                 foreach ($filiereListe as $idFiliere) {
                     $data = array(
                         'id_union' => $idUnion,
@@ -243,6 +355,13 @@
             $this->db->join('zone_intervention', 'zone_intervention.ID_FOKONTANY = opb.ID_FOKONTANY');
             $this->db->where('ID_UNION',$idUnion);
             return $this->db->get()->result();
+        }
+
+        public function deleteUnion($idUnion){
+            $this->db->where('ID_UNION', $idUnion);
+            if(! $this->db->delete('tab_union')) {
+                return $this->db->error();
+            }
         }
 
         //OPB
@@ -277,8 +396,42 @@
             return $this->insertOpbFilieres($this->db->insert_id(),$filiereListe);
         }
 
+        public function updateOpb($idFokontany,$nomOpb,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type,$id){
+            $data = array(
+                'id_fokontany' => $idFokontany,
+                'nom_opb' => $nomOpb,
+                'date_creation' => $dateCreation,
+                'statut' => $statut,
+                'formelle' => $formelle,
+                'id_representant' => $representant,
+                'contact' => $contact,
+                'observation' => $observation,
+                'type' => $type
+            );
+            $this->db->where('ID_OPB', $id);
+            if(! $this->db->update('opb', $data)){
+                return $this->db->error();
+            }
+            return $this->updateOpbFilieres($id,$filiereListe);
+        }
+
         public function insertOpbFilieres($idOpb,$filiereListe){
             if(isset($filiereListe) && count($filiereListe)!=0) {
+                foreach ($filiereListe as $idFiliere) {
+                    $data = array(
+                        'id_opb' => $idOpb,
+                        'id_filiere' => $idFiliere
+                    );
+                    if(! $this->db->insert('opb_filieres', $data)){
+                        return $this->db->error();
+                    }
+                }
+            }
+        }
+
+        public function updateOpbFilieres($idOpb,$filiereListe){
+            if(isset($filiereListe) && count($filiereListe)!=0) {
+                $this->db->delete('opb_filieres', array('ID_OPB' => $idOpb));
                 foreach ($filiereListe as $idFiliere) {
                     $data = array(
                         'id_opb' => $idOpb,
@@ -317,6 +470,13 @@
             $this->db->join('fonctioninop', 'fonctioninop.ID_FONCTION = opb_menages.ID_FONCTION');
             $this->db->where('ID_OPB',$idOpb);
             return $this->db->get()->result();
+        }
+
+        public function deleteOpb($idOpb){
+            $this->db->where('ID_OPB', $idOpb);
+            if(! $this->db->delete('opb')) {
+                return $this->db->error();
+            }
         }
 
         //opb union

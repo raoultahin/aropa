@@ -39,10 +39,6 @@
                         <input class="with-gap" name="formelle" type="radio" id="non" value="0"/>
                         <label class="grey-text" style="top: 0" for="non">non</label>
                     </div>
-                    <div class="input-field col s4">
-                        <input id="type_op" name="type" type="number" class="validate" min="1">
-                        <label class="label" for="type_op">Type OP</label>
-                    </div>
                     <div class="input-field col s12">
                         <input type="hidden" name="representant">
                         <input id="representant_union" type="text" class="autocomplete" autocomplete="off">

@@ -1,6 +1,13 @@
 <?php
 	class M_zone_intervention extends CI_Model {
 
+        public function getZoneIntervention(){
+            $this->db->select('NOM_REGION,NOM_DISTRICT,NOM_COMMUNE');
+            $this->db->from('zone_intervention');
+            $this->db->group_by('NOM_REGION,NOM_DISTRICT,NOM_COMMUNE');
+            return $this->db->get()->result();
+        }
+
         //region
         public function getRegion(){
             $query = $this->db->get("regions");
@@ -112,6 +119,11 @@
             }
         }
 
+        public function getCommuneByCode($code){
+            $query = $this->db->get_where('communes', array('CODE_COMMUNE' => $code));
+            return $query->row();
+        }
+
         //fokontany
         public function getFokontany(){
             $query = $this->db->get("fokontany");
@@ -141,7 +153,7 @@
                 'nom_fokontany' => $nomFokontany
             );
 
-            if(! $this->db->update('fokontany', $data, "id_fokontant = " . $idFokontany)) {
+            if(! $this->db->update('fokontany', $data, "id_fokontany = " . $idFokontany)) {
                 return $this->db->error();
             }
         }
@@ -152,9 +164,16 @@
             }
         }
 
+        public function getFokontanyByCode($code){
+            $query = $this->db->get_where('fokontany', array('CODE_FOKONTANY' => $code));
+            return $query->row();
+        }
+
         public function getZoneInterventionByIdFkt($idFkt){
             $query = $this->db->get_where('zone_intervention', array('id_fokontany' =>$idFkt));
             return $query->row();
         }
+
+
 
 	}

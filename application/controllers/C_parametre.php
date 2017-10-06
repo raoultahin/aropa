@@ -11,6 +11,11 @@
             $data['titre']= 'Paramétrage';
             $data['contents']= 'zone_intervention';
             $data['regions'] = $this->M_zone_intervention->getRegion();
+            $data['zoneIntervention'] = $this->M_zone_intervention->getZoneIntervention();
+            $data['nb'] = new stdClass();
+            $data['nb']->NB_DISTRICT = count($this->M_zone_intervention->getDistrict());
+            $data['nb']->NB_COMMUNE = count($this->M_zone_intervention->getCommune());
+            $data['nb']->NB_FOKONTANY = count($this->M_zone_intervention->getFokontany());
 
             $this->load->view('templates',$data);
         }
@@ -290,6 +295,27 @@
             echo json_encode($data['fokontany']);
         }
 
+        public function importer_fokontany(){
+            $this->load->model('M_zone_intervention');
+
+            $file = fopen($_FILES['csv']['tmp_name'], 'r');
+            $temp = null;
+            $add = 0;
+            while (($data = fgetcsv($file, 1000, ";")) !== FALSE) {
+                if($data[0]!=$temp) {
+                    $add = 0;
+                    $commune = $this->M_zone_intervention->getCommuneByCode($data[0]);
+                }
+                $add++;
+                $error=$this->M_zone_intervention->insertFokontany($commune->ID_COMMUNE,$data[0].$add,$data[1]);
+                if(isset($error)) {
+                    echo $error['message'];
+                    break;
+                }
+                $temp=$data[0];
+            }
+        }
+
         /*
          * OPF
          */
@@ -337,6 +363,21 @@
             }
             else redirect('c_parametre/ajout_opf');
 
+        }
+
+        public function delete_opf(){
+            $this->load->model('M_op');
+
+            $idOpf = $this->input->post('id_opf');
+
+            if($idOpf!='') {
+                $error = $this->M_op->deleteOpf($idOpf);
+                if(!isset($error))
+                    redirect('c_parametre/liste_opf');
+                else
+                    echo $error['message'];
+            }
+            else redirect('c_parametre/liste_opf');
         }
 
         /*
@@ -387,6 +428,21 @@
             else redirect('c_parametre/ajout_opr');
         }
 
+        public function delete_opr(){
+            $this->load->model('M_op');
+
+            $idOpr = $this->input->post('id_opr');
+
+            if($idOpr!='') {
+                $error = $this->M_op->deleteOpr($idOpr);
+                if(!isset($error))
+                    redirect('c_parametre/liste_opr');
+                else
+                    echo $error['message'];
+            }
+            else redirect('c_parametre/liste_opr');
+        }
+
         /*
          * UNION
          */
@@ -419,14 +475,13 @@
             $statut = $this->input->post('statut');
             $filiereListe = $this->input->post('filieres');
             $formelle = $this->input->post('formelle');
-            $type = $this->input->post('type');
             $representant = $this->input->post('representant');
             $contact = $this->input->post('contact');
             $siege = $this->input->post('id_fokontany');
             $observation = $this->input->post('observation');
             if($representant=='') $representant=null;
             if(isset($nomUnion) && $nomUnion!='') {
-                $error = $this->M_op->insertUnion($siege,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type);
+                $error = $this->M_op->insertUnion($siege,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe);
                 if(!isset($error)) {
                     redirect('c_parametre/liste_union');
                 }
@@ -434,6 +489,21 @@
                     echo $error['message'];
             }
             else redirect('c_parametre/ajout_union');
+        }
+
+        public function delete_union(){
+            $this->load->model('M_op');
+
+            $idUnion = $this->input->post('id_union');
+
+            if($idUnion!='') {
+                $error = $this->M_op->deleteUnion($idUnion);
+                if(!isset($error))
+                    redirect('c_parametre/liste_union');
+                else
+                    echo $error['message'];
+            }
+            else redirect('c_parametre/liste_union');
         }
 
         /*
@@ -452,11 +522,13 @@
         public function ajout_opb(){
             $this->load->model('M_zone_intervention');
             $this->load->model('M_filiere');
+            $this->load->model('M_appui');
 
             $data['titre'] = 'Paramétrage';
             $data['contents'] = 'ajout_opb';
             $data['filieres'] = $this->M_filiere->getFilieres();
             $data['regions'] = $this->M_zone_intervention->getRegion();
+            $data['catOp'] = $this->M_appui->getCatOp();
             $this->load->view('templates',$data);
         }
 
@@ -483,6 +555,44 @@
                     echo $error['message'];
             }
             else redirect('c_parametre/ajout_opb');
+        }
+
+        public function delete_opb(){
+            $this->load->model('M_op');
+
+            $idOpb = $this->input->post('id_opb');
+
+            if($idOpb!='') {
+                $error = $this->M_op->deleteOpb($idOpb);
+                if(!isset($error))
+                    redirect('c_parametre/liste_opb');
+                else
+                    echo $error['message'];
+            }
+            else redirect('c_parametre/liste_opb');
+        }
+
+        public function importer_opb(){
+            $this->load->model('M_zone_intervention');
+            $this->load->model('M_op');
+
+            $file = fopen($_FILES['csv']['tmp_name'], 'r');
+            $temp = null;
+            while (($data = fgetcsv($file, 1000, ";")) !== FALSE) {
+                if($data[0]!=$temp) {
+                    $fokontany = $this->M_zone_intervention->getFokontanyByCode($data[0]);
+                }
+                $date = date('Y-m-d',strtotime($data[2]));
+                if($data[2]=='') $date = null;
+                $filiereListe = array_filter(explode(',',$data[3]));
+//                $error = $this->M_op->insertOpb($fokontany->ID_FOKONTANY,$data[1],$date,null,null,null,null,null,$filiereListe,$data[4]);
+                echo count($filiereListe).'<br>';
+                if(isset($error)) {
+                    echo $error['message'];
+                    break;
+                }
+                $temp=$data[0];
+            }
         }
 
         /*
@@ -555,6 +665,59 @@
                 }
                 $this->load->view('templates', $data);
             }
+        }
+
+        public function edit_op($op,$id){
+            $this->load->model('M_op');
+            $this->load->model('M_filiere');
+            $this->load->model('M_zone_intervention');
+
+            $data['titre'] = 'Paramétrage';
+            $data['contents'] = 'edit_op';
+            if(isset($op) && isset($id)) {
+                $data['op'] = $op;
+                $column='ID_'.$op.' ID_OP, CODE_'.$op.' CODE_OP, NOM_'.$op.' NOM_OP, NOM_REGION, NOM_DISTRICT, NOM_COMMUNE, zone_intervention.ID_FOKONTANY, NOM_FOKONTANY, DATE_CREATION, STATUT, FORMELLE, NOM_MENAGE,CONTACT, OBSERVATION';
+                $data['ficheOp'] = $this->M_op->getOpById($op,$id,$column);
+                $data['fil'] = $this->M_op->getOpFiliere($id,$op);
+                $data['filieres'] = $this->M_filiere->getFilieres();
+                $data['regions'] = $this->M_zone_intervention->getRegion();
+
+                $this->load->view('templates', $data);
+            }
+        }
+
+        public function update_op($op,$id){
+            $this->load->model('M_op');
+
+            $nomOp = $this->input->post('nom_op');
+            $dateCreation = $this->input->post('date_creation');
+            $statut = $this->input->post('statut');
+            $filiereListe = $this->input->post('filieres');
+            $formelle = $this->input->post('formelle');
+            if($op=='opb') $type = $this->input->post('type_op');
+            $representant = $this->input->post('representant');
+            $contact = $this->input->post('contact');
+            $siege = $this->input->post('id_fokontany');
+            $observation = $this->input->post('observation');
+            if($representant=='') $representant=null;
+            if(isset($nomOp) && $nomOp!='') {
+                $error = null;
+                if($op=='opf')
+                    $error = $this->M_op->updateOpf($siege,$nomOp,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$id);
+                if($op=='opr')
+                    $error = $this->M_op->updateOpr($siege,$nomOp,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$id);
+                if($op=='union')
+                    $error = $this->M_op->updateUnion($siege,$nomOp,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$id);
+                if($op=='opb')
+                    $error = $this->M_op->updateOpb($siege,$nomOp,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type,$id);
+
+                if(!isset($error)) {
+                    redirect('c_parametre/liste_'.$op);
+                }
+                else
+                    echo $error['message'];
+            }
+            else redirect('c_parametre/edit_op/'.$op.'/'.$id);
         }
 
         public function ajout_membre($op,$id){

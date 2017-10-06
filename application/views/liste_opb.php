@@ -2,7 +2,7 @@
     <div class="container1">
         <div class="row z-depth-1">
             <div class="col s12">
-                <h2 class="header">Liste des OPB </h2>
+                <h2 class="header">Liste des OPB <a href="#importer" class="modal-trigger waves-effect waves-light btn blue">Importer</a> </h2>
                 <table class="bordered striped">
                     <thead>
                     <tr>
@@ -40,50 +40,25 @@
             </div>
         </div>
     </div>
-    <!-- Modal add region -->
-    <div id="add_region" class="modal">
-        <form method="post" action="<?php echo base_url(); ?>c_parametre/insert_region">
-            <div class="modal-content">
-                <h5 class="green-text">Ajouter une région</h5>
+    <!-- Modal import opb -->
+    <div id="importer" class="modal" style="width: 50%">
+        <form method="post" action="<?php echo base_url(); ?>c_parametre/importer_opb" enctype="multipart/form-data">
+            <div class="modal-content center-align">
+                <h5 class="green-text"> Importer OPB (CSV)</h5>
                 <div class="divider"></div>
-                <div class="col s12 container">
-                    Code du région:
-                    <div class="input-field inline" style="width:70%;">
-                        <input type="text" name="code_region">
-                    </div><br>
-                    Nom du région:
-                    <div class="input-field inline" style="width:70%;">
-                        <input type="text" name="nom_region">
+                <div class="file-field input-field">
+                    <div class="btn blue">
+                        <span>File</span>
+                        <input type="file" name="csv">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="width: 100% !important;">
                 <button type="button" class="modal-action modal-close red waves-effect waves-light btn">Fermer</button>
-                <button type="submit" class="waves-effect green waves-light btn">Ajouter</button>
-            </div>
-        </form>
-    </div>
-    <!-- Modal modif region -->
-    <div id="modif_region" class="modal">
-        <form method="post" action="<?php echo base_url(); ?>c_parametre/update_region">
-            <div class="modal-content">
-                <h5 class="green-text">Modifier une région</h5>
-                <div class="divider"></div>
-                <div class="col s12 container">
-                    <input id="id_region" type="hidden" name="id_region">
-                    Code du région:
-                    <div class="input-field inline" style="width:70%;">
-                        <input id="code_region" type="text" name="code_region">
-                    </div><br>
-                    Nom du région:
-                    <div class="input-field inline" style="width:70%;">
-                        <input id="nom_region" type="text" name="nom_region">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="modal-action modal-close red waves-effect waves-light btn">Fermer</button>
-                <button type="submit" class="waves-effect green waves-light btn">Modifier</button>
+                <button type="submit" class="waves-effect green waves-light btn">Importer</button>
             </div>
         </form>
     </div>

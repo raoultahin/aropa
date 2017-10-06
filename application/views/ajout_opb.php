@@ -39,9 +39,13 @@
                         <input class="with-gap" name="formelle" type="radio" id="non" value="0"/>
                         <label class="grey-text" style="top: 0" for="non">non</label>
                     </div>
-                    <div class="input-field col s4">
-                        <input id="type_op" name="type" type="number" class="validate" min="1">
-                        <label class="label" for="type_op">Type OP</label>
+                    <div class="input-field col s6">
+                        <select class="browser-default" style="border: 1px solid darkgrey;" name="type">
+                            <option disabled selected value="">Type OP</option>
+                            <?php foreach($catOp as $cat){ ?>
+                                <option value="<?php echo $cat->ID_CAT_OP ?>"><?php echo $cat->LIBELLE ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
                     <div class="input-field col s12">
                         <input type="hidden" name="representant">

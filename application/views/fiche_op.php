@@ -2,7 +2,7 @@
     <div class="container1">
         <div class="row z-depth-1">
             <div class="col s12">
-                <h2 class="header" style="margin-bottom: 30px;">Fiche <?php echo strtoupper($op)?> <a href="#!" class="waves-effect blue waves-light btn right">Modifier</a></h2>
+                <h2 class="header" style="margin-bottom: 30px;">Fiche <?php echo strtoupper($op)?> <a href="<?php echo base_url()?>c_parametre/edit_op/<?php echo $op.'/'.$ficheOp->ID_OP?>" class="waves-effect blue waves-light btn right">Modifier</a></h2>
                 <div class="row">
                     <div class="input-field col s6">
                         <input readonly id="code_op" value="<?php echo $ficheOp->CODE_OP?>" type="text" class="black-text" >
