@@ -4,11 +4,11 @@
             <div class="col s12">
                 <h2 class="header" style="margin-bottom: 30px;">Ajout membre UNION</h2>
                 <div class="row">
-                    <div class="input-field col s3">
+                    <div class="input-field col s6 m3">
                         <input disabled id="code_op" value="<?php echo $ficheOp->CODE_OP?>" type="text" class="black-text" >
                         <label class="blue-text" for="code_op">Code UNION</label>
                     </div>
-                    <div class="input-field col s3">
+                    <div class="input-field col s6 m3">
                         <input disabled id="nom_op" value="<?php echo $ficheOp->NOM_OP?>" type="text" class="black-text">
                         <label class="blue-text" for="nom_op">Nom UNION</label>
                     </div>
@@ -28,8 +28,7 @@
                         <tr>
                             <td><?php echo $i+1?></td>
                             <td class="input-field">
-                                <input type="hidden" name="membres[]">
-                                <input type="text" class="autocomplete" autocomplete="off">
+                                <input type="text"  name="membres[]" class="autocomplete" autocomplete="off">
                             </td>
                         </tr>
                         <?php } ?>
@@ -66,16 +65,16 @@
                     var liste = response;
                     var data = {};
                     for (var i = 0; i < liste.length; i++) {
-                        data[liste[i].CODE_OPB+' : '+liste[i].NOM_OPB] = liste[i].ID_OPB;
+                        data[(liste[i].CODE_OPB+' : '+liste[i].NOM_OPB).trim()] = liste[i].ID_OPB;
                     }
                     $('input.autocomplete').autocomplete({
                         data: data,
-                        onAutocomplete: function(val) {
-                            $('input.autocomplete').change(function(){
-                                $(this.previousElementSibling).attr('value',data[val]);
+                        onAutocomplete: function (val) {
+                            $('input.autocomplete').change(function () {
+                                $(this.previousElementSibling).attr('value', data[val.trim()]);
                             });
                         },
-                        limit: 5
+                        limit: 10
                     });
                 }
             });

@@ -24,7 +24,7 @@
             </div>
         </nav>
         <!-- side-nav -->
-        <ul id="slide-out" class="side-nav blue-grey darken-3 collapsible hide-on-small-only" data-collapsible="accordion" style="overflow: auto;">
+        <ul id="slide-out" class="side-nav blue-grey darken-3 collapsible show-on-small" data-collapsible="accordion" style="overflow: auto;">
             <div class="logo">
                 <img class="circle" src="<?php echo base_url(); ?>assets/images/logo-aropa.png" alt="logo"/>
             </div>

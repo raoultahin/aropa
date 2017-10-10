@@ -37,7 +37,7 @@
             $nomRegion = $this->input->post('nom_region');
 
             if($codeRegion!='' && $nomRegion!='') {
-                $this->M_zone_intervention->insertRegion($codeRegion,$nomRegion);
+                $this->M_zone_intervention->insertRegion($codeRegion,trim($nomRegion));
                 redirect('c_parametre/liste_region');
             }
             else redirect('c_parametre/liste_region');
@@ -101,7 +101,7 @@
             $nomDistrict = $this->input->post('nom_district');
 
             if($codeDistrict!='' && $nomDistrict!='' && $idRegion!='') {
-                $error=$this->M_zone_intervention->insertDistrict($idRegion,$codeDistrict,$nomDistrict);
+                $error=$this->M_zone_intervention->insertDistrict($idRegion,$codeDistrict,trim($nomDistrict));
 
                 if(!isset($error))
                     redirect('c_parametre/liste_district');
@@ -177,7 +177,7 @@
             $nomCommune = $this->input->post('nom_commune');
 
             if($codeCommune!='' && $nomCommune!='' && $idDistrict!='') {
-                $error=$this->M_zone_intervention->insertCommune($idDistrict,$codeCommune,$nomCommune);
+                $error=$this->M_zone_intervention->insertCommune($idDistrict,$codeCommune,trim($nomCommune));
                 if(!isset($error))
                     redirect('c_parametre/liste_commune');
                 else
@@ -246,7 +246,7 @@
             $nomFokontany = $this->input->post('nom_fokontany');
 
             if($codeFokontany!='' && $nomFokontany!='' && $idCommune!='') {
-                $error=$this->M_zone_intervention->insertFokontany($idCommune,$codeFokontany,$nomFokontany);
+                $error=$this->M_zone_intervention->insertFokontany($idCommune,$codeFokontany,trim($nomFokontany));
                 if(!isset($error))
                     redirect('c_parametre/liste_fokontany');
                 else
@@ -307,7 +307,7 @@
                     $commune = $this->M_zone_intervention->getCommuneByCode($data[0]);
                 }
                 $add++;
-                $error=$this->M_zone_intervention->insertFokontany($commune->ID_COMMUNE,$data[0].$add,$data[1]);
+                $error=$this->M_zone_intervention->insertFokontany($commune->ID_COMMUNE,$data[0].$add,trim($data[1]));
                 if(isset($error)) {
                     echo $error['message'];
                     break;
@@ -354,7 +354,7 @@
             $observation = $this->input->post('observation');
             if($representant=='') $representant=null;
             if($nomOpf!='') {
-                $error = $this->M_op->insertOpf($siege,$nomOpf,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe);
+                $error = $this->M_op->insertOpf($siege,trim($nomOpf),$dateCreation,$statut,$formelle,trim($representant),trim($contact),trim($observation),$filiereListe);
                 if(!isset($error)) {
                     redirect('c_parametre/liste_opf');
                 }
@@ -375,7 +375,7 @@
                 if(!isset($error))
                     redirect('c_parametre/liste_opf');
                 else
-                    echo $error['message'];
+                    echo($error);
             }
             else redirect('c_parametre/liste_opf');
         }
@@ -418,7 +418,7 @@
             $observation = $this->input->post('observation');
             if($representant=='') $representant=null;
             if(isset($nomOpr) && $nomOpr!='') {
-                $error = $this->M_op->insertOpr($siege,$nomOpr,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe);
+                $error = $this->M_op->insertOpr($siege,trim($nomOpr),$dateCreation,$statut,$formelle,trim($representant),trim($contact),trim($observation),$filiereListe);
                 if(!isset($error)) {
                     redirect('c_parametre/liste_opr');
                 }
@@ -438,7 +438,7 @@
                 if(!isset($error))
                     redirect('c_parametre/liste_opr');
                 else
-                    echo $error['message'];
+                    echo $error;
             }
             else redirect('c_parametre/liste_opr');
         }
@@ -481,7 +481,7 @@
             $observation = $this->input->post('observation');
             if($representant=='') $representant=null;
             if(isset($nomUnion) && $nomUnion!='') {
-                $error = $this->M_op->insertUnion($siege,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe);
+                $error = $this->M_op->insertUnion($siege,null,trim($nomUnion),$dateCreation,$statut,$formelle,trim($representant),trim($contact),trim($observation),$filiereListe);
                 if(!isset($error)) {
                     redirect('c_parametre/liste_union');
                 }
@@ -501,9 +501,32 @@
                 if(!isset($error))
                     redirect('c_parametre/liste_union');
                 else
-                    echo $error['message'];
+                    echo $error;
             }
             else redirect('c_parametre/liste_union');
+        }
+
+        public function importer_union(){
+            $this->load->model('M_zone_intervention');
+            $this->load->model('M_op');
+
+            $file = fopen($_FILES['csv']['tmp_name'], 'r');
+            $temp = null;
+            while (($data = fgetcsv($file, 1000, ";")) !== FALSE) {
+                if($data[0]!=$temp) {
+                    $fokontany = $this->M_zone_intervention->getFokontanyByCode($data[0]);
+                }
+                $date = date('Y-m-d',strtotime($data[4]));
+                if($data[4]=='') $date = null;
+                $filiereListe = array_filter(explode(',',$data[2]));
+                $idOpr = empty($data[3])? null:$data[3];
+                $error = $this->M_op->insertUnion($fokontany->ID_FOKONTANY,$idOpr,trim($data[1]),$date,null,null,null,$data[5],null,$filiereListe);
+                if(isset($error)) {
+                    echo $error['message'];
+                    break;
+                }
+                $temp=$data[0];
+            }
         }
 
         /*
@@ -547,7 +570,7 @@
             $observation = $this->input->post('observation');
             if($representant=='') $representant=null;
             if(isset($nomOpb) && $nomOpb!='') {
-                $error = $this->M_op->insertOpb($siege,$nomOpb,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type);
+                $error = $this->M_op->insertOpb($siege,trim($nomOpb),$dateCreation,$statut,$formelle,trim($representant),trim($contact),trim($observation),$filiereListe,$type);
                 if(!isset($error)) {
                     redirect('c_parametre/liste_opb');
                 }
@@ -567,7 +590,7 @@
                 if(!isset($error))
                     redirect('c_parametre/liste_opb');
                 else
-                    echo $error['message'];
+                    echo $error;
             }
             else redirect('c_parametre/liste_opb');
         }
@@ -585,8 +608,7 @@
                 $date = date('Y-m-d',strtotime($data[2]));
                 if($data[2]=='') $date = null;
                 $filiereListe = array_filter(explode(',',$data[3]));
-//                $error = $this->M_op->insertOpb($fokontany->ID_FOKONTANY,$data[1],$date,null,null,null,null,null,$filiereListe,$data[4]);
-                echo count($filiereListe).'<br>';
+                $error = $this->M_op->insertOpb($fokontany->ID_FOKONTANY,trim($data[1]),$date,null,null,null,null,null,$filiereListe,$data[4]);
                 if(isset($error)) {
                     echo $error['message'];
                     break;
@@ -632,7 +654,7 @@
             $imf = $this->input->post('imf');
 
             if(isset($nomMenage) && $nomMenage!='') {
-                $error = $this->M_op->insertMenage($siege,$typeEaf,$nomMenage,$surnom,$sexe,$imf,$filiereListe);
+                $error = $this->M_op->insertMenage($siege,$typeEaf,trim($nomMenage),trim($surnom),$sexe,$imf,$filiereListe);
                 if(!isset($error)) {
                     redirect('c_parametre/liste_menage');
                 }

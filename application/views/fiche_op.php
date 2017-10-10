@@ -84,7 +84,7 @@
                     <a href="<?php echo base_url();?>c_parametre/ajout_membre/<?php echo $op?>/<?php echo $ficheOp->ID_OP?>"  class="btn-floating btn-large right waves-effect waves-light green"><i class="material-icons">add</i></a>
                 </h5>
                 <?php if($op=='opf'){?>
-                    <table class="bordered striped">
+                    <table id="liste" class="bordered striped">
                         <thead>
                         <tr>
                             <th width="10%">Code OPR</th>
@@ -116,7 +116,7 @@
                     </table>
                 <?php } ?>
                 <?php if($op=='opr'){?>
-                    <table class="bordered striped">
+                    <table id="liste" class="bordered striped">
                         <thead>
                         <tr>
                             <th width="10%">Code OP</th>
@@ -150,7 +150,7 @@
                     </table>
                 <?php } ?>
                 <?php if($op=='union'){?>
-                    <table class="bordered striped">
+                    <table id="liste" class="bordered striped">
                         <thead>
                         <tr>
                             <th width="10%">Code OPB</th>
@@ -184,7 +184,7 @@
                     </table>
                 <?php } ?>
                 <?php if($op=='opb'){?>
-                    <table class="bordered striped">
+                    <table id="liste" class="bordered striped">
                         <thead>
                         <tr>
                             <th width="10%">Code EAF</th>
@@ -225,6 +225,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datatables.min.js"></script>
 <script type="text/javascript">
     var li = $('a[href="http://localhost/aropa/c_parametre/liste_<?php echo $op?>"]').parent();
     li.addClass("active");
@@ -232,4 +233,26 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+    $(document).ready(function(){
+        $('#liste').DataTable({
+            "language": {
+                "lengthMenu": "Afficher _MENU_ ligne par page",
+                "zeroRecords": "Rien à afficher",
+                "info": "<b>Total: _TOTAL_</b> enregistrements",
+                "sInfoEmpty":      "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
+                "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                "oPaginate": {
+                    "sPrevious":   "<i class='material-icons'>chevron_left</i>",
+                    "sNext":       "<i class='material-icons'>chevron_right</i>"
+                },
+                "sSearch":         "Rechercher&nbsp;:"
+            },
+            "drawCallback": function () {
+                $('#liste_paginate a').addClass('waves-effect btn-flat');
+            }
+        });
+
+        $('select').addClass('browser-default');
+
+    });
 </script>

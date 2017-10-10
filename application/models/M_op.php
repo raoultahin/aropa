@@ -34,8 +34,8 @@
         public function getOpf(){
             $this->db->select('opf.ID_OPF,opf.CODE_OPF,opf.NOM_OPF,opf.STATUT,opf.FORMELLE,opf.ID_REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
             $this->db->from('opf');
-            $this->db->join('opf_filieres','opf_filieres.ID_OPF = opf.ID_OPF');
-            $this->db->join('filieres','filieres.ID_FILIERE = opf_filieres.ID_FILIERE');
+            $this->db->join('opf_filieres','opf_filieres.ID_OPF = opf.ID_OPF','left');
+            $this->db->join('filieres','filieres.ID_FILIERE = opf_filieres.ID_FILIERE','left');
             $this->db->group_by('opf.ID_OPF,opf.CODE_OPF,opf.NOM_OPF,opf.STATUT,opf.FORMELLE,opf.ID_REPRESENTANT');
             $query = $this->db->get();
             return $query->result();
@@ -118,18 +118,33 @@
         }
 
         public function deleteOpf($idOpf){
-            $this->db->where('ID_OPF', $idOpf);
-            if(! $this->db->delete('opf')) {
-                return $this->db->error();
+            try {
+                $this->db->trans_begin();
+
+                $res = $this->db->query('UPDATE opr SET ID_OPF = NULL WHERE ID_OPF = '.$idOpf);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM opf_filieres WHERE ID_OPF = '.$idOpf);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM opf WHERE ID_OPF = '.$idOpf);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $this->db->trans_commit();
             }
+            catch(Exception $e) {
+                $this->db->trans_rollback();
+                return $e->getMessage();
+            }
+
         }
 
         //opr
         public function getOpr(){
             $this->db->select('opr.ID_OPR,CODE_OPR,NOM_OPR,STATUT,FORMELLE,ID_REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
             $this->db->from('opr');
-            $this->db->join('opr_filieres','opr_filieres.ID_OPR = opr.ID_OPR');
-            $this->db->join('filieres','filieres.ID_FILIERE = opr_filieres.ID_FILIERE');
+            $this->db->join('opr_filieres','opr_filieres.ID_OPR = opr.ID_OPR','left');
+            $this->db->join('filieres','filieres.ID_FILIERE = opr_filieres.ID_FILIERE','left');
             $this->db->group_by('opr.ID_OPR,CODE_OPR,NOM_OPR,STATUT,FORMELLE,ID_REPRESENTANT');
             $query = $this->db->get();
             return $query->result();
@@ -254,28 +269,51 @@
         }
 
         public function deleteOpr($idOpr){
-            $this->db->where('ID_OPR', $idOpr);
-            if(! $this->db->delete('opr')) {
-                return $this->db->error();
+            try {
+                $this->db->trans_begin();
+
+                $res = $this->db->query('UPDATE tab_union SET ID_OPR = NULL WHERE ID_OPR = '.$idOpr);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM opr_filieres WHERE ID_OPR = '.$idOpr);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM opr_opb WHERE ID_OPR = '.$idOpr);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM opr WHERE ID_OPR = '.$idOpr);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $this->db->trans_commit();
             }
+            catch(Exception $e) {
+                $this->db->trans_rollback();
+                return $e->getMessage();
+            }
+
         }
 
         //UNION
         public function getUnion(){
             $this->db->select('tab_union.ID_UNION,CODE_UNION,NOM_UNION,STATUT,FORMELLE,ID_REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
             $this->db->from('tab_union');
-            $this->db->join('union_filieres','union_filieres.ID_UNION = tab_union.ID_UNION');
-            $this->db->join('filieres','filieres.ID_FILIERE = union_filieres.ID_FILIERE');
+            $this->db->join('union_filieres','union_filieres.ID_UNION = tab_union.ID_UNION','left');
+            $this->db->join('filieres','filieres.ID_FILIERE = union_filieres.ID_FILIERE','left');
             $this->db->group_by('tab_union.ID_UNION,CODE_UNION,NOM_UNION,STATUT,FORMELLE,ID_REPRESENTANT');
             $query = $this->db->get();
             return $query->result();
         }
 
-        public function insertUnion($idFokontany,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe){
-            $count = $this->db->count_all('tab_union')+1;
+        public function insertUnion($idFokontany,$idOpr,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe){
+            $last = $this->db->order_by('CODE_UNION',"desc")
+                ->limit(1)
+                ->get('tab_union')
+                ->row();
+            $count = intval(substr($last->CODE_UNION,1))+1;
             $codeUnion = 'U'.str_pad($count,2,0,STR_PAD_LEFT);
             $data = array(
                 'id_fokontany' => $idFokontany,
+                'id_opr' => $idOpr,
                 'code_union' => $codeUnion,
                 'nom_union' => $nomUnion,
                 'date_creation' => $dateCreation,
@@ -340,9 +378,11 @@
 
         public function insertUnionMembre($idUnion,$membres){
             foreach($membres as $membre) {
+                $temp = explode(':',$membre);
+                $opb = $this->getOpbByCode(trim($temp[0]));
                 $data = array(
                     'ID_UNION' => $idUnion,
-                    'ID_OPB' => $membre
+                    'ID_OPB' => $opb->ID_OPB
                 );
                 $this->db->insert('union_opb', $data);
             }
@@ -358,25 +398,54 @@
         }
 
         public function deleteUnion($idUnion){
-            $this->db->where('ID_UNION', $idUnion);
-            if(! $this->db->delete('tab_union')) {
-                return $this->db->error();
+            try {
+                $this->db->trans_begin();
+
+
+                $res = $this->db->query('DELETE FROM union_filieres WHERE ID_UNION = '.$idUnion);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM union_opb WHERE ID_UNION = '.$idUnion);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM tab_union WHERE ID_UNION = '.$idUnion);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $this->db->trans_commit();
             }
+            catch(Exception $e) {
+                $this->db->trans_rollback();
+                return $e->getMessage();
+            }
+
         }
 
         //OPB
-        public function getOPB(){
-            $this->db->select('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,ID_REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
+        public function getOpb(){
+            $this->db->select('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,ID_REPRESENTANT,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
             $this->db->from('opb');
-            $this->db->join('opb_filieres','opb_filieres.ID_OPB = opb.ID_OPB');
-            $this->db->join('filieres','filieres.ID_FILIERE = opb_filieres.ID_FILIERE');
-            $this->db->group_by('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,ID_REPRESENTANT');
+            $this->db->join('opb_filieres','opb_filieres.ID_OPB = opb.ID_OPB','left');
+            $this->db->join('filieres','filieres.ID_FILIERE = opb_filieres.ID_FILIERE','left');
+            $this->db->join('zone_intervention','zone_intervention.ID_FOKONTANY = opb.ID_FOKONTANY','left');
+            $this->db->group_by('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,ID_REPRESENTANT,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION');
             $query = $this->db->get();
             return $query->result();
         }
 
+        public function getOpbByCode($code){
+            $this->db->select('ID_OPB');
+            $this->db->from('opb');
+            $this->db->where('CODE_OPB',$code);
+            $query = $this->db->get();
+            return $query->row();
+        }
+
         public function insertOpb($idFokontany,$nomOpb,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type){
-            $count = $this->db->count_all('opb')+1;
+            $last = $this->db->order_by('CODE_OPB',"desc")
+                    ->limit(1)
+                    ->get('opb')
+                    ->row();
+            $count = intval(substr($last->CODE_OPB,3))+1;
             $codeOpb = 'OPB'.str_pad($count,5,0,STR_PAD_LEFT);
             $data = array(
                 'id_fokontany' => $idFokontany,
@@ -473,10 +542,35 @@
         }
 
         public function deleteOpb($idOpb){
-            $this->db->where('ID_OPB', $idOpb);
-            if(! $this->db->delete('opb')) {
-                return $this->db->error();
+            try {
+                $this->db->trans_begin();
+
+
+                $res = $this->db->query('DELETE FROM opb_filieres WHERE ID_OPB = '.$idOpb);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM campagnes_opb WHERE ID_OPB = '.$idOpb);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM union_opb WHERE ID_OPB = '.$idOpb);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM opr_opb WHERE ID_OPB = '.$idOpb);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM opb_menages WHERE ID_OPB = '.$idOpb);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM opb WHERE ID_OPB = '.$idOpb);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $this->db->trans_commit();
             }
+            catch(Exception $e) {
+                $this->db->trans_rollback();
+                return $e->getMessage();
+            }
+
         }
 
         //opb union
