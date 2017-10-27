@@ -14,7 +14,6 @@
         <div class="row z-depth-1">
             <div class="col s12">
                 <h2 class="header" style="margin-bottom: 30px;">Nouvelle appui <?php echo $op ?></h2>
-
                 <form method="post" action="<?php echo base_url(); ?>c_appui/ajout_appui" style="margin-bottom: 20px;" class="container">
                     <div class="row">
                         <div class="input-field inline col s12">
@@ -64,7 +63,7 @@
                     <div class="row">
                         <div class="input-field col s4">
                             <label for="date_appui" class="grey-text active">Date de financement</label>
-                            <input id="date_appui" type="date" class="datepicker" name="date_financement">
+                            <input id="date_appui" type="date" value="<?php echo empty($appui)?'':$appui->DATE_FINANCEMENT ?>" class="datepicker" name="date_financement">
                         </div>
                         <div class="input-field col s4">
                             <label for="montant" class="grey-text">Montant</label>
@@ -104,7 +103,7 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="nature_appui" type="text" name="description" >
+                            <input id="nature_appui" type="text" name="description" value="<?php echo empty($appui)?'':$appui->DESCRIPTION?>">
                             <label class="grey-text" for="nature_appui">Objet/Nature de l'appui</label>
                         </div>
                     </div>

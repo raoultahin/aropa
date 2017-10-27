@@ -58,7 +58,7 @@
         $(function() {
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost/aropa/c_rest/liste_opb/<?php echo $ficheOp->ID_OP ?>',
+                url: 'http://localhost/aropa/c_rest/membre_union/<?php echo $ficheOp->ID_OP ?>',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 dataType : 'json',
                 success: function(response) {

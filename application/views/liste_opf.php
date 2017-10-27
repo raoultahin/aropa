@@ -1,8 +1,8 @@
 <main>
     <div class="container1">
-        <div class="row z-depth-1">
+        <div class="row z-depth-1" style="margin-bottom: 80px">
             <div class="col s12">
-                <h2 class="header">Liste des OPF </h2>
+                <h2 class="header left">Liste des OPF </h2>
                 <table class="bordered striped">
                     <thead>
                     <tr>
@@ -12,7 +12,7 @@
                         <th>Statut juridique</th>
                         <th>Formelle</th>
                         <th>Representant</th>
-                        <th width="12%">Option</th>
+                        <th width="10%">Option</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -23,7 +23,7 @@
                         <td><?php echo $opf->FILIERES ?></td>
                         <td><?php echo $opf->STATUT ?></td>
                         <td><?php if($opf->FORMELLE == 1) echo 'OUI'; else echo 'NON' ?></td>
-                        <td><?php echo $opf->ID_REPRESENTANT ?></td>
+                        <td><?php echo $opf->REPRESENTANT ?></td>
                         <td>
                             <a href="<?php echo base_url()?>c_parametre/edit_op/opf/<?php echo $opf->ID_OPF ?>" class="waves-effect waves-light green btn edit" data-id="<?php echo $opf->ID_OPF ?>"><i class="material-icons">edit</i></a>
                             <a href="#delete_opf" class="modal-trigger waves-effect waves-light red btn delete" data-id="<?php echo $opf->ID_OPF ?>"><i class="material-icons">delete</i></a>
@@ -32,6 +32,9 @@
                     <?php } ?>
                     </tbody>
                 </table>
+                <div id="pagination">
+                    <p class="left"><b>Total: <?php echo $opfTotal?></b></p>
+                </div>
                 <div class="fixed-action-btn">
                     <a href="<?php echo base_url(); ?>c_parametre/ajout_opf" class="btn-floating btn-large red">
                         <i class="large material-icons">add</i>
@@ -59,6 +62,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize-pagination.js"></script>
 
 <script type="text/javascript">
     var li = $('a[href="http://localhost/aropa/c_parametre/liste_opf"]').parent();
@@ -67,6 +71,22 @@
     var parentLi = li.parents("li");
     parentLi.addClass("active");
     $(parentLi).children().first().addClass("active");
+
+    $(document).ready(function(){
+        $('#pagination').materializePagination({
+            align: 'right',
+            lastPage:  <?php echo $opfTotal/19 ?>,
+            firstPage:  1,
+            urlParameter: 'page',
+            useUrlParameter: true,
+            onClickCallback: function(requestedPage){
+                window.location.replace('<?php echo base_url() ?>c_parametre/liste_opf?page='+requestedPage);
+            }
+        });
+
+        $('.pagination').removeClass('right-align');
+        $('.pagination').addClass('right');
+    });
 
     $(document).on('click', '.delete', function () {
         var id_opf = $(this).attr('data-id');

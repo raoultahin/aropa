@@ -1,13 +1,17 @@
 <?php
 	class M_op extends CI_Model {
 
+        public function getTotal($table)
+        {
+            return $this->db->count_all($table);
+        }
+
         public function getOp($op,$column){
             $table = $op;
             if($op=='union') $table = 'tab_'.$op;
             $this->db->select($column);
             $this->db->from($table);
             $this->db->join('zone_intervention', 'zone_intervention.id_fokontany = '.$table.'.id_fokontany','left');
-            $this->db->join('menages', 'menages.id_menage = '.$table.'.id_representant','left');
             $query = $this->db->get();
             return $query->result();
         }
@@ -31,18 +35,30 @@
         }
 
         //opf
-        public function getOpf(){
-            $this->db->select('opf.ID_OPF,opf.CODE_OPF,opf.NOM_OPF,opf.STATUT,opf.FORMELLE,opf.ID_REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
+        public function getOpf($page = ''){
+            if(!empty($page)){
+                $skip = ($page * 20)-20;
+                $this->db->limit(20,$skip);
+            }
+            $this->db->select('opf.ID_OPF,opf.CODE_OPF,opf.NOM_OPF,opf.STATUT,opf.FORMELLE,opf.REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
             $this->db->from('opf');
             $this->db->join('opf_filieres','opf_filieres.ID_OPF = opf.ID_OPF','left');
             $this->db->join('filieres','filieres.ID_FILIERE = opf_filieres.ID_FILIERE','left');
-            $this->db->group_by('opf.ID_OPF,opf.CODE_OPF,opf.NOM_OPF,opf.STATUT,opf.FORMELLE,opf.ID_REPRESENTANT');
+            $this->db->group_by('opf.ID_OPF,opf.CODE_OPF,opf.NOM_OPF,opf.STATUT,opf.FORMELLE,opf.REPRESENTANT');
             $query = $this->db->get();
             return $query->result();
         }
 
-        public function insertOpf($idFokontany,$nomOpf,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe){
+        public function insertOpf($idFokontany,$nomOpf,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$active){
+            if($active==null) $active = 1;
             $count = $this->db->count_all('opf')+1;
+            if($count != 1) {
+                $last = $this->db->order_by('CODE_OPF',"desc")
+                    ->limit(1)
+                    ->get('opf')
+                    ->row();
+                $count = intval(substr($last->CODE_OPF,3))+1;
+            }
             $codeOpf = 'OPF'.str_pad($count,2,0,STR_PAD_LEFT);
             $data = array(
                 'id_fokontany' => $idFokontany,
@@ -51,9 +67,10 @@
                 'date_creation' => $dateCreation,
                 'statut' => $statut,
                 'formelle' => $formelle,
-                'id_representant' => $representant,
+                'representant' => $representant,
                 'contact' => $contact,
-                'observation' => $observation
+                'observation' => $observation,
+                'active' => $active
             );
             if(! $this->db->insert('opf', $data)){
                 return $this->db->error();
@@ -68,7 +85,7 @@
                 'date_creation' => $dateCreation,
                 'statut' => $statut,
                 'formelle' => $formelle,
-                'id_representant' => $representant,
+                'representant' => $representant,
                 'contact' => $contact,
                 'observation' => $observation
             );
@@ -140,12 +157,16 @@
         }
 
         //opr
-        public function getOpr(){
-            $this->db->select('opr.ID_OPR,CODE_OPR,NOM_OPR,STATUT,FORMELLE,ID_REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
+        public function getOpr($page = ''){
+            if(!empty($page)){
+                $skip = ($page * 20)-20;
+                $this->db->limit(20,$skip);
+            }
+            $this->db->select('opr.ID_OPR,CODE_OPR,NOM_OPR,STATUT,FORMELLE,REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
             $this->db->from('opr');
             $this->db->join('opr_filieres','opr_filieres.ID_OPR = opr.ID_OPR','left');
             $this->db->join('filieres','filieres.ID_FILIERE = opr_filieres.ID_FILIERE','left');
-            $this->db->group_by('opr.ID_OPR,CODE_OPR,NOM_OPR,STATUT,FORMELLE,ID_REPRESENTANT');
+            $this->db->group_by('opr.ID_OPR,CODE_OPR,NOM_OPR,STATUT,FORMELLE,REPRESENTANT');
             $query = $this->db->get();
             return $query->result();
         }
@@ -158,9 +179,18 @@
             return $query->result();
         }
 
-        public function insertOpr($idFokontany,$nomOpr,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe){
+        public function insertOpr($idFokontany,$nomOpr,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$active){
+            if($active==null) $active = 1;
             $count = $this->db->count_all('opr')+1;
+            if($count != 1) {
+                $last = $this->db->order_by('CODE_OPR',"desc")
+                    ->limit(1)
+                    ->get('opr')
+                    ->row();
+                $count = intval(substr($last->CODE_OPR,3))+1;
+            }
             $codeOpr = 'OPR'.str_pad($count,2,0,STR_PAD_LEFT);
+            $result = array();
             $data = array(
                 'id_fokontany' => $idFokontany,
                 'code_opr' => $codeOpr,
@@ -168,14 +198,18 @@
                 'date_creation' => $dateCreation,
                 'statut' => $statut,
                 'formelle' => $formelle,
-                'id_representant' => $representant,
+                'representant' => $representant,
                 'contact' => $contact,
-                'observation' => $observation
+                'observation' => $observation,
+                'active' => $active
             );
             if(! $this->db->insert('opr', $data)){
-                return $this->db->error();
+                $result['error'] = $this->db->error();
+                return $result;
             }
-            return $this->insertOprFilieres($this->db->insert_id(),$filiereListe);
+            $result['idOpr'] = $this->db->insert_id();
+            $result['error'] = $this->insertOprFilieres($this->db->insert_id(),$filiereListe);
+            return $result;
         }
 
         public function updateOpr($idFokontany,$nomOpr,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$id){
@@ -185,7 +219,7 @@
                 'date_creation' => $dateCreation,
                 'statut' => $statut,
                 'formelle' => $formelle,
-                'id_representant' => $representant,
+                'representant' => $representant,
                 'contact' => $contact,
                 'observation' => $observation
             );
@@ -198,20 +232,31 @@
 
         public function insertOprMembre($idOpr,$membres){
             foreach($membres as $membre) {
-                $codeId = explode(":",$membre);
-                if($membre[0]=='U') {
+                $temp = explode(':',$membre);
+                if($temp[0][0]=='U') {
+                    $union = $this->getUnionByCode(trim($temp[0]));
                     $this->db->set('ID_OPR', $idOpr);
-                    $this->db->where('ID_UNION', $codeId[1]);
+                    $this->db->where('ID_UNION', $union->ID_UNION);
                     $this->db->update('tab_union');
                 }
                 else {
+                    $opb = $this->getOpbByCode(trim($temp[0]));
                     $data = array(
                         'ID_OPR' => $idOpr,
-                        'ID_OPB' => intval($codeId[1])
+                        'ID_OPB' => intval($opb->ID_OPB)
                     );
                     $this->db->insert('opr_opb', $data);
                 }
             }
+        }
+
+        public function insertOprMembreIdOpb($idOpr,$idOpb){
+            $data = array(
+                'ID_OPR' => $idOpr,
+                'ID_OPB' => $idOpb
+            );
+            $this->db->insert('opr_opb', $data);
+
         }
 
         public function insertOprFilieres($idOpr,$filiereListe){
@@ -250,6 +295,12 @@
                 $this->db->where('id_opr', $membre);
                 $this->db->update('opr');
             }
+        }
+
+        public function setOprIdOpf($idOpf,$idOpr){
+            $this->db->set('ID_OPF', $idOpf);
+            $this->db->where('id_opr', $idOpr);
+            $this->db->update('opr');
         }
 
         public function getOprMembres($idOpr){
@@ -294,22 +345,38 @@
         }
 
         //UNION
-        public function getUnion(){
-            $this->db->select('tab_union.ID_UNION,CODE_UNION,NOM_UNION,STATUT,FORMELLE,ID_REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
+        public function getUnion($page = ''){
+            if(!empty($page)){
+                $skip = ($page * 20)-20;
+                $this->db->limit(20,$skip);
+            }
+            $this->db->select('tab_union.ID_UNION,CODE_UNION,NOM_UNION,STATUT,FORMELLE,REPRESENTANT,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
             $this->db->from('tab_union');
             $this->db->join('union_filieres','union_filieres.ID_UNION = tab_union.ID_UNION','left');
             $this->db->join('filieres','filieres.ID_FILIERE = union_filieres.ID_FILIERE','left');
-            $this->db->group_by('tab_union.ID_UNION,CODE_UNION,NOM_UNION,STATUT,FORMELLE,ID_REPRESENTANT');
+            $this->db->group_by('tab_union.ID_UNION,CODE_UNION,NOM_UNION,STATUT,FORMELLE,REPRESENTANT');
             $query = $this->db->get();
             return $query->result();
         }
 
-        public function insertUnion($idFokontany,$idOpr,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe){
-            $last = $this->db->order_by('CODE_UNION',"desc")
-                ->limit(1)
-                ->get('tab_union')
-                ->row();
-            $count = intval(substr($last->CODE_UNION,1))+1;
+        public function getUnionByCode($code){
+            $this->db->select('ID_UNION');
+            $this->db->from('tab_union');
+            $this->db->where('CODE_UNION',$code);
+            $query = $this->db->get();
+            return $query->row();
+        }
+
+        public function insertUnion($idFokontany,$idOpr,$nomUnion,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$active){
+            if($active == null) $active = 1;
+            $count = $this->db->count_all('tab_union')+1;
+            if($count != 1) {
+                $last = $this->db->order_by('CODE_UNION',"desc")
+                    ->limit(1)
+                    ->get('tab_union')
+                    ->row();
+                $count = intval(substr($last->CODE_UNION,1))+1;
+            }
             $codeUnion = 'U'.str_pad($count,2,0,STR_PAD_LEFT);
             $data = array(
                 'id_fokontany' => $idFokontany,
@@ -319,9 +386,10 @@
                 'date_creation' => $dateCreation,
                 'statut' => $statut,
                 'formelle' => $formelle,
-                'id_representant' => $representant,
+                'representant' => $representant,
                 'contact' => $contact,
-                'observation' => $observation
+                'observation' => $observation,
+                'active' => $active
             );
             if(! $this->db->insert('tab_union', $data)){
                 return $this->db->error();
@@ -336,7 +404,7 @@
                 'date_creation' => $dateCreation,
                 'statut' => $statut,
                 'formelle' => $formelle,
-                'id_representant' => $representant,
+                'representant' => $representant,
                 'contact' => $contact,
                 'observation' => $observation
             );
@@ -388,6 +456,15 @@
             }
         }
 
+        public function insertUnionMembreIdOpb($idUnion,$idOpb){
+            $data = array(
+                'ID_UNION' => $idUnion,
+                'ID_OPB' => $idOpb
+            );
+            $this->db->insert('union_opb', $data);
+
+        }
+
         public function getUnionMembres($idUnion){
             $this->db->select('opb.ID_OPB ID_OP,CODE_OPB CODE_OP,NOM_OPB NOM_OP,TYPE,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION');
             $this->db->from('union_opb');
@@ -421,13 +498,17 @@
         }
 
         //OPB
-        public function getOpb(){
-            $this->db->select('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,ID_REPRESENTANT,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
+        public function getOpb($page = ''){
+            if(!empty($page)){
+                $skip = ($page * 20)-20;
+                $this->db->limit(20,$skip);
+            }
+            $this->db->select('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,REPRESENTANT,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
             $this->db->from('opb');
             $this->db->join('opb_filieres','opb_filieres.ID_OPB = opb.ID_OPB','left');
             $this->db->join('filieres','filieres.ID_FILIERE = opb_filieres.ID_FILIERE','left');
             $this->db->join('zone_intervention','zone_intervention.ID_FOKONTANY = opb.ID_FOKONTANY','left');
-            $this->db->group_by('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,ID_REPRESENTANT,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION');
+            $this->db->group_by('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,REPRESENTANT,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION');
             $query = $this->db->get();
             return $query->result();
         }
@@ -440,13 +521,18 @@
             return $query->row();
         }
 
-        public function insertOpb($idFokontany,$nomOpb,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type){
-            $last = $this->db->order_by('CODE_OPB',"desc")
+        public function insertOpb($idFokontany,$nomOpb,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type,$active){
+            if($active==null) $active = 1;
+            $count = $this->db->count_all('opb')+1;
+            if($count != 1) {
+                $last = $this->db->order_by('CODE_OPB',"desc")
                     ->limit(1)
-                    ->get('opb')
+                    ->get('opB')
                     ->row();
-            $count = intval(substr($last->CODE_OPB,3))+1;
+                $count = intval(substr($last->CODE_OPB,3))+1;
+            }
             $codeOpb = 'OPB'.str_pad($count,5,0,STR_PAD_LEFT);
+            $result = array();
             $data = array(
                 'id_fokontany' => $idFokontany,
                 'code_opb' => $codeOpb,
@@ -454,15 +540,19 @@
                 'date_creation' => $dateCreation,
                 'statut' => $statut,
                 'formelle' => $formelle,
-                'id_representant' => $representant,
+                'representant' => $representant,
                 'contact' => $contact,
                 'observation' => $observation,
-                'type' => $type
+                'type' => $type,
+                'active' => $active
             );
             if(! $this->db->insert('opb', $data)){
-                return $this->db->error();
+                $result['error'] = $this->db->error();
+                return $result;
             }
-            return $this->insertOpbFilieres($this->db->insert_id(),$filiereListe);
+            $result['idOpb'] = $this->db->insert_id();
+            $result['error'] = $this->insertOpbFilieres($this->db->insert_id(),$filiereListe);
+            return $result;
         }
 
         public function updateOpb($idFokontany,$nomOpb,$dateCreation,$statut,$formelle,$representant,$contact,$observation,$filiereListe,$type,$id){
@@ -472,7 +562,7 @@
                 'date_creation' => $dateCreation,
                 'statut' => $statut,
                 'formelle' => $formelle,
-                'id_representant' => $representant,
+                'representant' => $representant,
                 'contact' => $contact,
                 'observation' => $observation,
                 'type' => $type
@@ -532,11 +622,21 @@
             }
         }
 
+        public function insertOpbMembreDet($idOpb,$idMenage,$idFonction,$date){
+            $data = array(
+                'ID_MENAGE' => $idMenage,
+                'ID_FONCTION' => $idFonction,
+                'ID_OPB' => $idOpb,
+                'DATE_ADHESION' => $date
+            );
+            $this->db->insert('opb_menages', $data);
+        }
+
         public function getOpbMembres($idOpb){
             $this->db->select('menages.ID_MENAGE,CODE_MENAGE,NOM_MENAGE,SURNOM,TYPE,NOM_FONCTION,SEXE,DATE_ADHESION,IMF');
             $this->db->from('opb_menages');
-            $this->db->join('menages', 'menages.ID_MENAGE = opb_menages.ID_MENAGE');
-            $this->db->join('fonctioninop', 'fonctioninop.ID_FONCTION = opb_menages.ID_FONCTION');
+            $this->db->join('menages', 'menages.ID_MENAGE = opb_menages.ID_MENAGE','left');
+            $this->db->join('fonctioninop', 'fonctioninop.ID_FONCTION = opb_menages.ID_FONCTION','left');
             $this->db->where('ID_OPB',$idOpb);
             return $this->db->get()->result();
         }
@@ -580,9 +680,19 @@
         }
 
         //Ménages
-        public function getMenages(){
-            $query = $this->db->query("SELECT * FROM menages JOIN zone_intervention ON menages.ID_FOKONTANY= zone_intervention.ID_FOKONTANY");
-            return $query->result() ;
+        public function getMenages($page = ''){
+            if(!empty($page)){
+                $skip = ($page * 20)-20;
+                $this->db->limit(20,$skip);
+            }
+            $this->db->select('menages.ID_MENAGE,CODE_MENAGE,NOM_MENAGE,SURNOM,SEXE,IMF,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION');
+            $this->db->from('menages');
+            $this->db->join('menages_filieres','menages_filieres.ID_MENAGE = menages.ID_MENAGE','left');
+            $this->db->join('filieres','filieres.ID_FILIERE = menages_filieres.ID_FILIERE','left');
+            $this->db->join('zone_intervention','zone_intervention.ID_FOKONTANY = menages.ID_FOKONTANY','left');
+            $this->db->group_by('menages.ID_MENAGE,CODE_MENAGE,NOM_MENAGE,SURNOM,SEXE,IMF,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION');
+            $query = $this->db->get();
+            return $query->result();
         }
 
         public function getMenageById($id){
@@ -590,9 +700,19 @@
             return $query->row() ;
         }
 
-        public function insertMenage($idFokontany,$type,$nomMenage,$surnom,$sexe,$imf,$filiereListe){
+        public function insertMenage($idFokontany,$type,$nomMenage,$surnom,$sexe,$imf,$filiereListe,$active){
+            if($active==null) $active = 1;
             $count = $this->db->count_all('menages')+1;
-            $codeMenage = 'EAF'.str_pad($count,5,0,STR_PAD_LEFT);
+            if($count != 1) {
+                $last = $this->db->order_by('CODE_MENAGE', "desc")
+                    ->limit(1)
+                    ->get('menages')
+                    ->row();
+                $count = intval(substr($last->CODE_MENAGE, 3)) + 1;
+            }
+
+            $codeMenage = 'EAF'.str_pad($count,6,0,STR_PAD_LEFT);
+            $result = array();
             $data = array(
                 'id_fokontany' => $idFokontany,
                 'type' => $type,
@@ -600,12 +720,16 @@
                 'nom_menage' => $nomMenage,
                 'surnom' => $surnom,
                 'sexe' => $sexe,
-                'imf' => $imf
+                'imf' => $imf,
+                'active' => $active
             );
             if(! $this->db->insert('menages', $data)){
-                return $this->db->error();
+                $result['error'] = $this->db->error();
+                return $result;
             }
-            return $this->insertMenageFilieres($this->db->insert_id(),$filiereListe);
+            $result['idMenage'] = $this->db->insert_id();
+            $result['error'] = $this->insertMenageFilieres($this->db->insert_id(),$filiereListe);
+            return $result;
         }
 
         public function insertMenageFilieres($idMenage,$filiereListe){
@@ -621,6 +745,37 @@
                 }
             }
         }
+
+        public function deleteMenage($idMenage){
+            try {
+                $this->db->trans_begin();
+
+                $res = $this->db->query('DELETE FROM menages_filieres WHERE ID_MENAGE = '.$idMenage);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM campagnes_opb WHERE ID_MENAGE = '.$idMenage);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM appui_menage WHERE ID_MENAGE = '.$idMenage);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM opb_menages WHERE ID_MENAGE = '.$idMenage);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $res = $this->db->query('DELETE FROM menages WHERE ID_MENAGE = '.$idMenage);
+                if(!$res) throw new Exception($this->db->error()['message']);
+
+                $this->db->trans_commit();
+            }
+            catch(Exception $e) {
+                $this->db->trans_rollback();
+                return $e->getMessage();
+            }
+
+        }
+
+
+
 
         public function getEafListeNotIn($idOpb){
             $query = $this->db->query('SELECT menages.ID_MENAGE, CODE_MENAGE, menages.NOM_MENAGE, menages.SURNOM FROM opb_menages RIGHT JOIN menages ON menages.ID_MENAGE = opb_menages.ID_MENAGE WHERE ID_OPB IS NULL OR ID_OPB != '.$idOpb);
@@ -660,5 +815,38 @@
             $this->db->where('ID_OPR',$idOpr);
             $union = $this->db->get_compiled_select();
             return $this->db->query($opb . ' UNION ' . $union)->result();
+        }
+
+        public function findOpb($critere,$page = '') {
+            if(!empty($page)){
+                $skip = ($page * 20)-20;
+                $this->db->limit(20,$skip);
+            }
+            $this->db->select('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,REPRESENTANT,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION,GROUP_CONCAT( NOM_FILIERE SEPARATOR "," )  FILIERES');
+            $this->db->from('opb');
+            $this->db->join('opb_filieres','opb_filieres.ID_OPB = opb.ID_OPB','left');
+            $this->db->join('filieres','filieres.ID_FILIERE = opb_filieres.ID_FILIERE','left');
+            $this->db->join('zone_intervention','zone_intervention.ID_FOKONTANY = opb.ID_FOKONTANY','left');
+            $this->db->group_by('opb.ID_OPB,CODE_OPB,NOM_OPB,STATUT,FORMELLE,REPRESENTANT,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION');
+
+            if(!empty($critere['idRegion'])) $this->db->where('ID_REGION',$critere['idRegion']);
+            if(!empty($critere['idDistrict'])) $this->db->where('ID_DISTRICT',$critere['idDistrict']);
+            if(!empty($critere['idCommune'])) $this->db->where('ID_COMMUNE',$critere['idCommune']);
+            if(!empty($critere['idFokontany'])) $this->db->where('opb.ID_FOKONTANY',$critere['idFokontany']);
+
+            if(!empty($critere['codeOp'])) $this->db->like('CODE_OPB',$critere['codeOp']);
+            if(!empty($critere['nomOp'])) $this->db->like('NOM_OPB',$critere['nomOp']);
+            if(!empty($critere['filiere'])) $this->db->like('NOM_FILIERE',$critere['filiere']);
+            if(!empty($critere['representant'])) $this->db->like('REPRESENTANT',$critere['representant']);
+
+            if($critere['formelle']!=null) {
+                $this->db->where('FORMELLE',$critere['formelle']);
+            }
+
+//            $union = $this->db->get_compiled_select();
+//            $this->db->query($union);
+//            var_dump($this->db);
+
+            return $this->db->get()->result();
         }
 	}

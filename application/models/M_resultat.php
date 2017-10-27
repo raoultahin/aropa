@@ -1,7 +1,11 @@
 <?php
 	class M_resultat extends CI_Model {
 
-        public function getResultatListe($annee,$op){
+        public function getResultatListe($annee,$op,$page){
+            if(!empty($page)){
+                $skip = ($page * 20)-20;
+                $this->db->limit(20,$skip);
+            }
             if($annee!='tous' && $annee!='' && $annee!=null){
                 if($op=='opb'){
                     $this->db->select('opb.ID_OPB ID_OP,CODE_OPB CODE_OP,NOM_OPB NOM_OP,ANNEE,filieres.ID_FILIERE,NUM_CAMPAGNE,NOM_FILIERE,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT,NOM_REGION');
@@ -166,7 +170,7 @@
                         'MONTANT' => $membre['montant'],
                         'ANNEE' => $annee,
                         'DATE_COLLECTE' => $dateCollecte,
-                        'DATE_SAISIE' => date("Y-m-d")
+                        'DATE_SAISIE' => date("Y-m-d h:i:s")
                     );
 
                     $this->db->insert('campagnes_opb', $data);

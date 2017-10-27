@@ -48,8 +48,7 @@
                         </select>
                     </div>
                     <div class="input-field col s12">
-                        <input type="hidden" name="representant">
-                        <input id="representant_opb" type="text" class="autocomplete" autocomplete="off">
+                        <input id="representant_opb" type="text" name="representant">
                         <label class="label" for="representant_opb">Représentant OPB</label>
                     </div>
                     <div class="input-field col s12">

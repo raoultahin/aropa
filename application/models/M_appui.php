@@ -2,7 +2,12 @@
 	class M_appui extends CI_Model {
 
         public function getAppuiListe(){
-            $query = $this->db->query('SELECT * FROM appui_opf UNION SELECT * FROM appui_opr UNION SELECT * FROM appui_union UNION SELECT * FROM appui_opb ORDER BY DATE_SAISIE DESC ');
+            if(!empty($page)){
+                $skip = ($page * 20)-20;
+                $query = $this->db->query('SELECT * FROM appui_opf UNION SELECT * FROM appui_opr UNION SELECT * FROM appui_union UNION SELECT * FROM appui_opb ORDER BY DATE_SAISIE DESC LIMIT '.$skip.',20');
+                return $query->result();
+            }
+            $query = $this->db->query('SELECT * FROM appui_opf UNION SELECT * FROM appui_opr UNION SELECT * FROM appui_union UNION SELECT * FROM appui_opb ORDER BY DATE_SAISIE DESC');
             return $query->result();
         }
 
@@ -17,7 +22,11 @@
         }
 
         public function getAppuiOpById($id){
-            $query = $this->db->get_where('appui_op', array('id_appui_op' => $id));
+            $this->db->select('*');
+            $this->db->from('appui_op');
+            $this->db->join('details_appui','details_appui.ID_DETAIL = appui_op.ID_DETAIL','left');
+            $this->db->where('id_appui_op',$id);
+            $query = $this->db->get();
             return $query->row();
         }
 
@@ -97,7 +106,7 @@
         public function getDetailAppuiById($id){
             $this->db->select('*');
             $this->db->from('details_appui');
-            $this->db->join('filieres', 'filieres.id_filiere = details_appui.id_filiere');
+            $this->db->join('filieres', 'filieres.id_filiere = details_appui.id_filiere','left');
             $this->db->where('id_detail', $id);
             $query = $this->db->get();
             return $query->row();
@@ -181,7 +190,7 @@
                 'qte' => $qte,
                 'unite' => $unite,
                 'date_collecte' => $dateCollecte,
-                'date_saisie' => date("Y-m-d")
+                'date_saisie' => date("Y-m-d h:i:s")
 
             );
             $this->db->insert('appui_op', $data);
@@ -214,7 +223,7 @@
                 'qte' => $qte,
                 'unite' => $unite,
                 'date_collecte' => $dateCollecte,
-                'date_saisie' => date("Y-m-d")
+                'date_saisie' => date("Y-m-d h:i:s")
             );
             $this->db->insert('appui_menage', $data);
             if ($this->db->trans_status() === FALSE)
@@ -250,6 +259,79 @@
             $this->db->join('menages','menages.ID_MENAGE=appui_menage.ID_MENAGE');
             $this->db->where('ID_PARENT',$idAppui);
             return $this->db->get()->result();
+        }
+
+        public function findAppui($critere,$page = '') {
+            $sql = 'SELECT * FROM appui_op LEFT JOIN ( SELECT * FROM appui_opf UNION SELECT * FROM appui_opr UNION SELECT * FROM appui_union UNION SELECT * FROM appui_opb ) vue ON vue.ID_APPUI_OP = appui_op.ID_APPUI_OP LEFT JOIN zone_intervention ON zone_intervention.ID_FOKONTANY = vue.ID_FOKONTANY';
+
+            if(!empty($critere['idRegion'])) $sql = $sql.' WHERE (ID_REGION = '.$critere['idRegion'];
+            if(!empty($critere['idDistrict'])) $sql = $sql.' AND ID_DISTRICT = '.$critere['idDistrict'];
+            if(!empty($critere['idCommune'])) $sql = $sql.' AND ID_COMMUNE = '.$critere['idCommune'];
+            if(!empty($critere['idFokontany'])) $sql = $sql.' AND ID_FOKONTANY = '.$critere['idFokontany'];
+
+            if(!empty($critere['idRegion'])) $sql = $sql.')';
+
+            if(!empty($critere['typeOp'])) {
+                if (strpos($sql, 'WHERE') !== false) $sql = $sql.' AND (';
+                if (strpos($sql, 'WHERE') === false) $sql = $sql.' WHERE (';
+                foreach ($critere['typeOp'] as $type) {
+                    if (strpos($sql, 'TYPE_OP') !== false) {
+                        $sql = $sql.' OR TYPE_OP = ' . $type;
+                    }
+                    else{
+                        $sql = $sql.' TYPE_OP = ' . $type;
+                    }
+                }
+                $sql = $sql.')';
+            }
+
+            if(!empty($critere['typeAppui'])) {
+                if (strpos($sql, 'WHERE') !== false) $sql = $sql.' AND (';
+                if (strpos($sql, 'WHERE') === false) $sql = $sql.' WHERE (';
+                foreach ($critere['typeAppui'] as $type) {
+                    if (strpos($sql, 'ID_TYPE') !== false) {
+                        $sql = $sql.' OR ID_TYPE = ' . $type;
+                    }
+                    else{
+                        $sql = $sql.' ID_TYPE = ' . $type;
+                    }
+                }
+                $sql = $sql.')';
+            }
+
+            if(!empty($critere['dateFDebut'])) {
+                if (strpos($sql, 'WHERE') !== false) $sql = $sql.' AND (';
+                if (strpos($sql, 'WHERE') === false) $sql = $sql.' WHERE (';
+                if(!empty($critere['dateFFin'])) {
+                    $sql = $sql.'DATE_FINANCEMENT BETWEEN \''.$critere['dateFDebut'].'\' AND \''.$critere['dateFFin'].'\'';
+                }
+                if(empty($critere['dateFFin'])) {
+                    $sql = $sql.'DATE_FINANCEMENT BETWEEN \''.$critere['dateFDebut'].'\' AND \''.date('Y-m-d').'\'';
+                }
+                $sql = $sql.')';
+            }
+
+            if(!empty($critere['dateCDebut'])) {
+                if (strpos($sql, 'WHERE') !== false) $sql = $sql.' AND (';
+                if (strpos($sql, 'WHERE') === false) $sql = $sql.' WHERE (';
+                if(!empty($critere['dateCFin'])) {
+                    $sql = $sql.'DATE_COLLECTE BETWEEN \''.$critere['dateCDebut'].'\' AND \''.$critere['dateCFin'].'\'';
+                }
+                if(empty($critere['dateCFin'])) {
+                    $sql = $sql.'DATE_COLLECTE BETWEEN \''.$critere['dateCDebut'].'\' AND \''.date('Y-m-d').'\'';
+                }
+                $sql = $sql.')';
+            }
+
+            if(!empty($page)){
+                $skip = ($page * 20)-20;
+
+                $sql = $sql.' LIMIT '.$skip.',20';
+            }
+
+            $query = $this->db->query($sql);
+            return $query->result();
+
         }
 
 	}

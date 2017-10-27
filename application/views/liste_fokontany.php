@@ -7,7 +7,9 @@
                     <thead>
                     <tr>
                         <th>Code</th>
-                        <th width="75%">Nom</th>
+                        <th>Nom Fokontany</th>
+                        <th>Nom Commune</th>
+                        <th>Nom District</th>
                         <th>Option</th>
                     </tr>
                     </thead>
@@ -16,6 +18,8 @@
                     <tr>
                         <td><?php echo $fkt->CODE_FOKONTANY ?></td>
                         <td><?php echo $fkt->NOM_FOKONTANY ?></td>
+                        <td><?php echo $fkt->NOM_COMMUNE ?></td>
+                        <td><?php echo $fkt->NOM_DISTRICT ?></td>
                         <td>
                             <a href="#!" class="waves-effect waves-light green btn edit" data-id="<?php echo $fkt->ID_FOKONTANY ?>"><i class="material-icons">edit</i></a>
                             <a href="#!" class="waves-effect waves-light red btn delete" data-id="<?php echo $fkt->ID_FOKONTANY ?>"><i class="material-icons">delete</i></a>

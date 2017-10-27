@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="input-field col s6">
                         <label for="date_appui" class="blue-text">Date de constitution</label>
-                        <input readonly id="date_appui" value="<?php echo date('d M Y',strtotime($ficheOp->DATE_CREATION))?>" type="text" class="black-text">
+                        <input readonly id="date_appui" value="<?php if($ficheOp->DATE_CREATION != '0000-00-00' && $ficheOp->DATE_CREATION != null)echo date('d M Y',strtotime($ficheOp->DATE_CREATION))?>" type="text" class="black-text">
                     </div>
                     <div class="input-field col s6">
                         <label for="statut" class="blue-text">Statut juridique</label>
@@ -26,7 +26,7 @@
                 <div class="row">
                     <div class="input-field col s12">
                         <label for="filiere" class="blue-text">Filières développées</label>
-                        <input readonly value="<?php echo $filieres->FILIERES?>"id="filiere" type="text" class="black-text">
+                        <input readonly value="<?php echo empty($filieres)?'':$filieres->FILIERES?>"id="filiere" type="text" class="black-text">
                     </div>
                 </div>
                 <div class="row">
@@ -40,7 +40,7 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s6">
-                        <input readonly value="<?php echo $ficheOp->NOM_MENAGE?>" id="representant_op" type="text" class="black-text">
+                        <input readonly value="<?php echo $ficheOp->REPRESENTANT?>" id="representant_op" type="text" class="black-text">
                         <label class="blue-text" for="representant_op">Représentant <?php echo strtoupper($op)?></label>
                     </div>
                     <div class="input-field col s6">

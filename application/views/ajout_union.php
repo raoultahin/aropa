@@ -40,8 +40,7 @@
                         <label class="grey-text" style="top: 0" for="non">non</label>
                     </div>
                     <div class="input-field col s12">
-                        <input type="hidden" name="representant">
-                        <input id="representant_union" type="text" class="autocomplete" autocomplete="off">
+                        <input id="representant_union" type="text" name="representant">
                         <label class="label" for="representant_union">Représentant union</label>
                     </div>
                     <div class="input-field col s12">

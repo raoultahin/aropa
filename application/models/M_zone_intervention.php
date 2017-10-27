@@ -14,6 +14,11 @@
             return $query->result();
         }
 
+        public function getRegionByCode($code){
+            $query = $this->db->get_where('regions', array('CODE_REGION' => $code));
+            return $query->row();
+        }
+
         public function insertRegion($codeRegion, $nomRegion){
             $data = array(
                 'code_region' => $codeRegion,
@@ -48,6 +53,11 @@
         public function getDistrictByRegion($idRegion){
             $query = $this->db->get_where('districts', array('id_region' => $idRegion));
             return $query->result();
+        }
+
+        public function getDistrictByCode($code){
+            $query = $this->db->get_where('districts', array('CODE_DISTRICT' => $code));
+            return $query->row();
         }
 
         public function insertDistrict($idRegion,$codeDistrict, $nomDistrict){
@@ -126,7 +136,11 @@
 
         //fokontany
         public function getFokontany(){
-            $query = $this->db->get("fokontany");
+            $this->db->select('ID_FOKONTANY,CODE_FOKONTANY,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT');
+            $this->db->from('zone_intervention');
+            $this->db->where('ID_FOKONTANY IS NOT NULL');
+            $this->db->group_by('ID_FOKONTANY,CODE_FOKONTANY,NOM_FOKONTANY,NOM_COMMUNE,NOM_DISTRICT');
+            $query = $this->db->get("");
             return $query->result();
         }
 

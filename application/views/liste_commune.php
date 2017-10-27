@@ -2,7 +2,7 @@
     <div class="container1">
         <div class="row z-depth-1" style="margin-bottom: 80px">
             <div class="col s12">
-                <h2 class="header">Liste des Communes </h2>
+                <h2 class="header">Liste des Communes <a href="#importer" class="modal-trigger waves-effect waves-light btn blue">Importer</a>  </h2>
                 <table id="liste" class="bordered striped">
                     <thead>
                     <tr>
@@ -32,6 +32,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal import commune -->
+    <div id="importer" class="modal" style="width: 50%">
+        <form method="post" action="<?php echo base_url(); ?>c_parametre/importer_commune" enctype="multipart/form-data">
+            <div class="modal-content center-align">
+                <h5 class="green-text"> Importer Commune (CSV)</h5>
+                <div class="divider"></div>
+                <div class="file-field input-field">
+                    <div class="btn blue">
+                        <span>File</span>
+                        <input type="file" name="csv">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="width: 100% !important;">
+                <button type="button" class="modal-action modal-close red waves-effect waves-light btn">Fermer</button>
+                <button type="submit" class="waves-effect green waves-light btn">Importer</button>
+            </div>
+        </form>
+    </div>
+
     <!-- Modal add commune -->
     <div id="add_commune" class="modal">
         <form method="post" action="<?php echo base_url(); ?>c_parametre/insert_commune">

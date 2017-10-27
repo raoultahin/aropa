@@ -21,8 +21,16 @@ header, main, footer {
         width: 85%;
     }
 }
-nav {
+nav, #dropdown1 {
     background-color: #039be5;
+}
+
+#dropdown1 > li:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-content li > a {
+    color: #ffffff;
 }
 
 /*font debut*/
@@ -203,7 +211,7 @@ li>.btn-floating i {
     color: #4caf50;
 }
 /* label underline focus color */
-.input-field input[type=text]:focus, .input-field input[type=number]:focus, .input-field textarea.materialize-textarea:focus, label>input[aria-controls=liste]:focus:not([readonly]) {
+.input-field input[type=text]:focus, .input-field input[type=number]:focus, .input-field textarea.materialize-textarea:focus, label>input[aria-controls=liste]:focus:not([readonly]), .input-field input[type="password"]:focus:not([readonly]) {
     border-bottom: 1px solid #4caf50;
     box-shadow: 0 1px 0 0 #4caf50;
 }

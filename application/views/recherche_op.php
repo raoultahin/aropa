@@ -1,12 +1,79 @@
 <main>
     <div class="container1">
+        <div class="row z-depth-2">
+            <div class="col s12" style="padding-bottom: 30px">
+                <h2 class="header">Recherche avancée <?php echo strtoupper($op)?></h2>
+                <form action="<?php echo base_url()?>c_parametre/rechercher/<?php echo $op ?>" method="get">
+                    <div class="row">
+                        Région:
+                        <div class="input-field inline" style="margin: 0 15px 0 5px">
+                            <select class="browser-default" name="id_region" style="border: 1px solid #9e9e9e">
+                                <option value="" disabled selected>Choisir une région</option>
+                                <?php foreach($regions as $region){?>
+                                    <option value="<?php echo $region->ID_REGION ?>"><?php echo $region->NOM_REGION ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        District:
+                        <div class="input-field inline" style="margin: 0 15px 0 5px">
+                            <select class="browser-default" name="id_district" style="border: 1px solid #9e9e9e">
+                                <option value="" disabled selected>Choisir une district</option>
+                            </select>
+                        </div>
+                        Commune:
+                        <div class="input-field inline" style="margin: 0 15px 0 5px">
+                            <select class="browser-default" name="id_commune" style="border: 1px solid #9e9e9e">
+                                <option value="" disabled selected>Choisir une commune</option>
+                            </select>
+                        </div>
+                        Fokontany:
+                        <div class="input-field inline" style="margin: 0 15px 0 5px">
+                            <select class="browser-default" name="id_fokontany" style="border: 1px solid #9e9e9e">
+                                <option value="" disabled selected>Choisir une fokontany</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s3">
+                            <label for="codeOp" class="grey-text">Code OP</label>
+                            <input id="codeOp" type="text" name="code_op">
+                        </div>
+                        <div class="input-field col s3">
+                            <label for="nomOp" class="grey-text">Nom OP</label>
+                            <input id="nomOp" type="text" name="nom_op">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s3">
+                            <label for="filiereOp" class="grey-text">Filière développée</label>
+                            <input id="filiereOp" type="text" name="filiere">
+                        </div>
+                        <div class="input-field col s3">
+                            <label for="representantOp" class="grey-text">Représentant</label>
+                            <input id="representantOp" type="text" name="representant">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s4">
+                            Formelle :
+                            <input class="with-gap" name="formelle" type="radio" id="oui" value="1"/>
+                            <label class="grey-text" style="top: 0" for="oui">oui</label>
+                            <input class="with-gap" name="formelle" type="radio" id="non" value="0"/>
+                            <label class="grey-text" style="top: 0" for="non">non</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="waves-effect waves-light btn darken-2 grey right"><i class="material-icons left">search</i> Affiner ma recherche</button>
+                </form>
+            </div>
+        </div>
+
+        <?php if(!empty($opListe)) {?>
         <div class="row z-depth-1" style="margin-bottom: 80px">
             <div id="liste" class="col s12">
-                <h2 class="header">Liste des OPB <a href="#importer" class="modal-trigger waves-effect waves-light btn blue">Importer</a> </h2>
+                <h2 class="header">Résultats du recherche : </h2>
                 <div class="row input-field">
                     <label for="recherche" class="grey-text">Recherche</label>
                     <input id="recherche" type="text" class="search col s3" style="margin: 0">
-                    <a href="<?php echo base_url()?>c_parametre/rechercher/opb" style="font-size: 13px;"> <i class="material-icons left" style="margin-right: 3px;font-size: 20px">search</i> Recherche avancée</a>
                 </div>
                 <table class="bordered striped">
                     <thead>
@@ -20,12 +87,12 @@
                         <th>Ditrict</th>
                         <th>Region</th>
                         <th>Formelle</th>
-                        <th>Representant</th>
+                        <th>Représentant</th>
                         <th width="10%">Option</th>
                     </tr>
                     </thead>
                     <tbody class="list">
-                    <?php foreach($opbListe as $opb) { ?>
+                    <?php foreach($opListe as $opb) { ?>
                         <tr>
                             <td class="codeOpb"><a href="<?php echo base_url()?>c_parametre/fiche_op/opb/<?php echo $opb->ID_OPB ?>"><?php echo $opb->CODE_OPB ?></a></td>
                             <td class="nomOpb"><?php echo $opb->NOM_OPB ?></td>
@@ -46,7 +113,7 @@
                     </tbody>
                 </table>
                 <div id="pagination">
-                    <p class="left"><b>Total: <?php echo $opbTotal?></b></p>
+                    <p class="left"><b>Total: <?php echo $opTotal ?></b></p>
                 </div>
                 <div class="fixed-action-btn">
                     <a href="<?php echo base_url(); ?>c_parametre/ajout_opb" class="btn-floating btn-large red">
@@ -55,28 +122,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modal import opb -->
-    <div id="importer" class="modal" style="width: 50%">
-        <form method="post" action="<?php echo base_url(); ?>c_parametre/importer_opb" enctype="multipart/form-data">
-            <div class="modal-content center-align">
-                <h5 class="green-text"> Importer OPB (CSV)</h5>
-                <div class="divider"></div>
-                <div class="file-field input-field">
-                    <div class="btn blue">
-                        <span>File</span>
-                        <input type="file" name="csv">
-                    </div>
-                    <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" style="width: 100% !important;">
-                <button type="button" class="modal-action modal-close red waves-effect waves-light btn">Fermer</button>
-                <button type="submit" class="waves-effect green waves-light btn">Importer</button>
-            </div>
-        </form>
     </div>
     <!-- Modal delete opb -->
     <div id="delete_opb" class="modal" style="width: 25%">
@@ -92,11 +137,13 @@
             </div>
         </form>
     </div>
+    <?php } ?>
 </main>
 <!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
+<!--<script type="text/javascript" src="--><?php //echo base_url(); ?><!--assets/js/datatables.min.js"></script>-->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/list.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize-pagination.js"></script>
 
@@ -116,12 +163,13 @@
 
         $('#pagination').materializePagination({
             align: 'right',
-            lastPage:  <?php if($opbTotal%20==0) echo $opbTotal/20; else  $opbTotal/20;+ 1 ?>,
+            lastPage:  <?php if($opTotal%20==0) echo $opTotal/20;else echo $opTotal/20 + 1 ?>,
             firstPage:  1,
             urlParameter: 'page',
             useUrlParameter: true,
             onClickCallback: function(requestedPage){
-                window.location.replace('<?php echo base_url() ?>c_parametre/liste_opb?page='+requestedPage);
+                console.log(window.location.href);
+                window.location.replace(window.location.href.split("&page")[0]+'&page='+requestedPage);
             }
         });
 

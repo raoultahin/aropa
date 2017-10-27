@@ -1,7 +1,7 @@
 <main>
     <div class="container1">
         <div class="row z-depth-1" style="margin-bottom: 80px;">
-            <div class="col s12">
+            <div id="liste" class="col s12">
                 <h2 class="header">Liste des résultats</h2>
                 <div class="row">
                     <label>Filtre : </label>
@@ -22,7 +22,12 @@
                         <button type="submit" class="waves-effect waves-light green btn btn-resultat"><i class="material-icons">search</i></button>
                     </form>
                 </div>
-                <table id="liste" class="bordered striped">
+                <div class="row input-field">
+                    <label for="recherche" class="grey-text">Recherche</label>
+                    <input id="recherche" type="text" class="search col s3" style="margin: 0">
+                    <a href="<?php echo base_url()?>c_appui/rechercher" style="font-size: 13px;"> <i class="material-icons left" style="margin-right: 3px;font-size: 20px">search</i> Recherche avancée</a>
+                </div>
+                <table class="bordered striped">
                     <thead>
                     <tr style="border-top: 1px solid #d0d0d0">
                         <th>Code OP</th>
@@ -37,7 +42,7 @@
                         <th width="3%"></th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="list">
                     <?php foreach($resultatListe as $resultat){ ?>
                     <tr>
                         <td><?php echo $resultat->CODE_OP ?></td>
@@ -56,6 +61,9 @@
                     <?php } ?>
                     </tbody>
                 </table>
+                <div id="pagination">
+                    <p class="left"><b>Total: <?php echo empty($resultatTotal)?'':$$resultatTotal?></b></p>
+                </div>
                 <div class="fixed-action-btn">
                     <a href="<?php echo base_url()?>c_resultat/choisir_opb" class="btn-floating btn-large red">
                         <i class="large material-icons">add</i>
@@ -69,30 +77,29 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/init.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/datatables.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/list.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/materialize-pagination.js"></script>
 <script type="text/javascript">
     var li = $('a[href="http://localhost/aropa/c_resultat/liste_resultat"]').parent();
     li.addClass("active");
     $(document).ready(function(){
-        $('#liste').DataTable({
-            "language": {
-                "lengthMenu": "Afficher _MENU_ ligne par page",
-                "zeroRecords": "Rien à afficher",
-                "info": "<b>Total: _TOTAL_</b> enregistrements",
-                "sInfoEmpty":      "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
-                "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                "oPaginate": {
-                    "sPrevious":   "<i class='material-icons'>chevron_left</i>",
-                    "sNext":       "<i class='material-icons'>chevron_right</i>"
-                },
-                "sSearch":         "Rechercher&nbsp;:"
-            },
-            "drawCallback": function () {
-                $('#liste_paginate a').addClass('waves-effect btn-flat');
+        var options = {
+            valueNames: [ 'date_saisie','code_op', 'nom_op', 'filiere', 'date_f', 'libele']
+        };
+        var appuiListe = new List('liste', options);
+
+        $('#pagination').materializePagination({
+            align: 'right',
+            lastPage:  <?php if($resultatTotal%20==0) echo $resultatTotal/20; else echo $resultatTotal/20;+ 1 ?>,
+            firstPage:  1,
+            urlParameter: 'page',
+            useUrlParameter: true,
+            onClickCallback: function(requestedPage){
+                window.location.replace('<?php echo base_url() ?>c_appui/liste_resultat?page='+requestedPage);
             }
         });
 
-        $('select').addClass('browser-default');
-
+        $('.pagination').removeClass('right-align');
+        $('.pagination').addClass('right');
     });
 </script>

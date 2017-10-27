@@ -65,7 +65,7 @@
                 <?php if($appui_op->TYPE_OP=='4') {?>
                     <div class="row">
                     <div class="input-field col s6">
-                        <input readonly value="<?php echo $cat_op->LIBELLE ?>" id="cat_op" type="text" class="black-text">
+                        <input readonly value="<?php echo empty($cat_op)?'':$cat_op->LIBELLE ?>" id="cat_op" type="text" class="black-text">
                         <label for="cat_op" class="blue-text">Catégorie du appuyée</label>
                     </div>
                 </div>
@@ -88,22 +88,22 @@
                     <div class="input-field col s12" style="margin: 0">
                         <div class="input-field inline col s3" style="padding-left: 0">
                             <select class="browser-default" name="id_region" style="border: 1px solid darkgrey;">
-                                <option value="" disabled selected><?php echo $zone_intervention->NOM_REGION ?></option>
+                                <option value="" disabled selected><?php echo empty($$zone_intervention)?null:$zone_intervention->NOM_REGION ?></option>
                             </select>
                         </div>
                         <div class="input-field inline col s3" style="padding-left: 0">
                             <select class="browser-default" name="id_district" style="border: 1px solid darkgrey;">
-                                <option value="" disabled selected><?php echo $zone_intervention->NOM_DISTRICT ?></option>
+                                <option value="" disabled selected><?php echo empty($$zone_intervention)?null:$zone_intervention->NOM_DISTRICT ?></option>
                             </select>
                         </div>
                         <div class="input-field inline col s3" style="padding-left: 0">
                             <select class="browser-default" name="id_commune" style="border: 1px solid darkgrey;">
-                                <option value="" disabled selected><?php echo $zone_intervention->NOM_COMMUNE ?></option>
+                                <option value="" disabled selected><?php echo empty($$zone_intervention)?null:$zone_intervention->NOM_COMMUNE ?></option>
                             </select>
                         </div>
                         <div class="input-field inline  col s3" style="padding-left: 0">
                             <select class="browser-default" name="id_fokontany" style="border: 1px solid darkgrey;">
-                                <option value="" disabled selected><?php echo $zone_intervention->NOM_FOKONTANY ?></option>
+                                <option value="" disabled selected><?php echo empty($$zone_intervention)?null:$zone_intervention->NOM_FOKONTANY ?></option>
                             </select>
                         </div>
                     </div>
@@ -229,7 +229,7 @@
                                     <td><?php echo $beneficiaire->UNITE ?></td>
                                     <td><?php echo $beneficiaire->QTE ?></td>
                                     <td>
-                                        <a href="<?php echo base_url()?>c_appui/fiche_appui/<?php echo $beneficiaire->ID_APPUI_MENAGE?>"><i class="material-icons green-text">info_outline</i></a>
+                                        <a href="<?php echo base_url()?>c_appui/fiche_appui_eaf/<?php echo $beneficiaire->ID_APPUI_MENAGE?>"><i class="material-icons green-text">info_outline</i></a>
                                     </td>
                                 </tr>
                             <?php } ?>

@@ -1,10 +1,21 @@
 <?php
-	class M_filiere extends CI_Model
+	class M_user extends CI_Model
     {
 
-        public function getFilieres(){
-            $query = $this->db->get("filieres");
-            return $query->result();
+        public function getUserById($id){
+            $this->db->select('*');
+            $this->db->from('users');
+            $this->db->join('user_region','user_region.ID_USER = users.ID_USER');
+            $this->db->where('users.ID_USER',$id);
+            return $this->db->get()->result();
+        }
+
+        public function countUser($username,$mdp){
+            $this->db->select('ID_USER');
+            $this->db->from('users');
+            $this->db->where('USERNAME',$username);
+            $this->db->where('MDP',$mdp);
+            return $this->db->get()->result();
         }
 
         public function getOpfFiliere($idOpf){

@@ -50,8 +50,7 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s6">
-                            <input type="hidden" name="representant">
-                            <input id="representant_op" type="text" class="autocomplete black-text" value="<?php echo $ficheOp->NOM_MENAGE?>" autocomplete="off">
+                            <input id="representant_op" type="text" name="representant" class="black-text" value="<?php echo $ficheOp->REPRESENTANT?>" autocomplete="off">
                             <label class="blue-text" for="representant_op">Représentant <?php echo strtoupper($op)?></label>
                         </div>
                         <div class="input-field col s6">

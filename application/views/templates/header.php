@@ -9,7 +9,7 @@
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta charset="utf-8">
-    <title>Index.html</title>
+    <title><?php echo $titre ?></title>
 </head>
 
 <body>
@@ -17,10 +17,22 @@
 <div class="conteneur">
     <!-- header -->
     <header>
+        <ul id="dropdown1" class="dropdown-content" style="top:70px">
+            <li style="height: 70px;min-width: 175px"><a href="#!" style="height: 100%"><i class="material-icons left">person</i>Profile</a></li>
+            <li style="height: 70px;min-width: 175px"><a href="<?php echo base_url()?>c_login/logout" style="height: 100%"><i class="material-icons left">power_settings_new</i>Déconnexion</a></li>
+        </ul>
         <nav class="top-nav">
             <div style="padding-left: 20px">
                 <a href="#" data-activates="slide-out" class="button-collapse show-on-large "><i class="material-icons">menu</i></a>
-                <div class="nav-wrapper"><a class="page-title"><?php echo $titre ?></a></div>
+                <div class="nav-wrapper">
+                    <a class="page-title"><?php echo $titre ?></a>
+                    <ul class="right">
+                        <!-- Dropdown Trigger -->
+                        <li style="height: 70px;min-width: 175px">
+                            <a class="dropdown-button" href="#!" data-activates="dropdown1" style="height: 100%"><i class="material-icons left">person</i><?php echo $this->session->user->USERNAME ?><i class="material-icons right">arrow_drop_down</i></a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
         <!-- side-nav -->

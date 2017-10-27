@@ -24,12 +24,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php for($i=0; $i<10; $i++) {?>
+                        <?php for($i=0; $i<50; $i++) {?>
                         <tr>
                             <td><?php echo $i+1?></td>
                             <td class="input-field">
-                                <input type="hidden" name="membres[]">
-                                <input type="text" class="autocomplete" autocomplete="off">
+                                <input type="text" name="membres[]" class="autocomplete" autocomplete="off">
                             </td>
                         </tr>
                         <?php } ?>
@@ -66,16 +65,12 @@
                     var liste = response;
                     var data = {};
                     for (var i = 0; i < liste.length; i++) {
-                        data[liste[i].CODE_OP+' : '+liste[i].NOM_OP] = liste[i].CODE_OP+':'+liste[i].ID_OP;
+                        data[liste[i].CODE_OP+' : '+liste[i].NOM_OP] = null;
                     }
                     $('input.autocomplete').autocomplete({
                         data: data,
-                        onAutocomplete: function(val) {
-                            $('input.autocomplete').change(function(){
-                                $(this.previousElementSibling).attr('value',data[val]);
-                            });
-                        },
-                        limit: 5
+                        onAutocomplete: function(val) {},
+                        limit: 10
                     });
                 }
             });

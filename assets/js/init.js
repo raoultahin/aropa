@@ -27,7 +27,7 @@ $(document).ready(function(){
     });
 });
 
-$(document).on('change','select[name="id_region"]', function () {
+$(document).on('click','select[name="id_region"]', function () {
     var id_region = $(this).val();
     $('select[name="id_district"]').html('<option value="" disabled selected>Choisir une district</option>');
     $('select[name="id_commune"]').html('<option value="" disabled selected>Choisir une commune</option>');
@@ -47,7 +47,7 @@ $(document).on('change','select[name="id_region"]', function () {
         }
     });
 });
-$(document).on('change','select[name="id_district"]', function () {
+$(document).on('click','select[name="id_district"]', function () {
     var id_district = $(this).val();
     $('select[name="id_commune"]').html('<option value="" disabled selected>Choisir une commune</option>');
     $('select[name="id_fokontany"]').html('<option value="" disabled selected>Choisir une Fokontany</option>');
@@ -66,7 +66,7 @@ $(document).on('change','select[name="id_district"]', function () {
         }
     });
 });
-$(document).on('change','select[name="id_commune"]', function () {
+$(document).on('click','select[name="id_commune"]', function () {
     var id_commune = $(this).val();
     $('select[name="id_fokontany"]').html('<option value="" disabled selected>Choisir une Fokontany</option>');
     $.ajax({
